@@ -1,12 +1,9 @@
 Watershed-Project
 ===============
+Intro:
+Watershed Nature Center Milers (WNC Milers) is a new project proposed by the Nature Preserve Foundation, Inc. (NPF).  The goal of the project is to give the Nature Preserve Foundation, Inc. a better idea of how the Watershed Nature Center of Edwardsville, IL is being used and to further encourage individuals to visit.  
 
-Intro:  
-“WNC Milers” is a new project proposed by the Watershed Nature Center.  
-The goal of the project is to give the Watershed Nature Center a better 
-idea of how their park is being used and to further encourage individuals 
-to visit.  This is to be done by means of personal accounts that allow 
-individuals to track dates and times of visits, track and record distances 
-traveled.  There is also the proposed idea of the possible development of a 
-social networking type web application where users can record progress in a 
-journal and provide place to post photographs.
+
+Problem Executive Summary:
+The Nature Preserve Foundation, Inc. currently has no methods for tracking visits or usage of the Watershed Nature Center.  Their goal is to promote use of the park and encourage overall wellness of the general public.  The only current method for checking membership status of a visitor is double checking a list.  They would also like to obtain the information necessary to send out newsletters and other information (i.e. Names, email, membership status, etc.)
+
