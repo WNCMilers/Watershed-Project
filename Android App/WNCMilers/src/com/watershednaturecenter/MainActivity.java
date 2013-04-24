@@ -3,18 +3,22 @@ package com.watershednaturecenter;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends SherlockFragmentActivity
 {
@@ -27,43 +31,87 @@ public class MainActivity extends SherlockFragmentActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		getSupportActionBar().setDisplayShowTitleEnabled(true);
-		getSupportActionBar().setDisplayShowHomeEnabled(true);
-		super.onCreate(savedInstanceState);
-
-		mViewPager = new ViewPager(this);
-		mViewPager.setId(R.id.pager);
-
-		setContentView(mViewPager);
-		ActionBar bar = getSupportActionBar();
-		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-		mTabsAdapter = new TabsAdapter(this, mViewPager);
-
-		mTabsAdapter.addTab(
-				bar.newTab().setText("Tracking"),
-				Distance_Time.class, null);
-		mTabsAdapter.addTab(
-				bar.newTab()
-						.setText("Challenges"),
-				Challenges.class, null);
-		mTabsAdapter.addTab(
-				bar.newTab()
-						.setText("Leaderboard"),
-				Leaderboard.class, null);
-		mTabsAdapter.addTab(
-				bar.newTab()
-						.setText("My Stats"),
-				Stats.class, null);
-		mTabsAdapter.addTab(
-				bar.newTab()
-						.setText("Photos"),
-				Photos.class, null);
-		mTabsAdapter.addTab(
-				bar.newTab()
-						.setText("Events"),
-				Events.class, null);
-
+		if(checkPlayServices()){
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setDisplayShowHomeEnabled(true);
+			super.onCreate(savedInstanceState);
+	
+			mViewPager = new ViewPager(this);
+			mViewPager.setId(R.id.pager);
+	
+			setContentView(mViewPager);
+			ActionBar bar = getSupportActionBar();
+			bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	
+			mTabsAdapter = new TabsAdapter(this, mViewPager);
+	
+			mTabsAdapter.addTab(
+					bar.newTab().setText("Tracking"),
+					Distance_Time.class, null);
+			mTabsAdapter.addTab(
+					bar.newTab()
+							.setText("Challenges"),
+					Challenges.class, null);
+			mTabsAdapter.addTab(
+					bar.newTab()
+							.setText("Leaderboard"),
+					Leaderboard.class, null);
+			mTabsAdapter.addTab(
+					bar.newTab()
+							.setText("My Stats"),
+					Stats.class, null);
+			mTabsAdapter.addTab(
+					bar.newTab()
+							.setText("Photos"),
+					Photos.class, null);
+			mTabsAdapter.addTab(
+					bar.newTab()
+							.setText("Events"),
+					Events.class, null);
+		}
+	}
+	
+	static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
+	 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  switch (requestCode) {
+	    case REQUEST_CODE_RECOVER_PLAY_SERVICES:
+	      if (resultCode == RESULT_CANCELED) {
+	        Toast.makeText(this, "Google Play Services must be installed.",
+	            Toast.LENGTH_SHORT).show();
+	        finish();
+	      }
+	      return;
+	  }
+	  super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	private boolean checkPlayServices() {
+	  int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+	  if (status != ConnectionResult.SUCCESS) {
+	    if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+	    	if(status == ConnectionResult.SERVICE_MISSING ||
+	    	   status == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED ||
+	    	   status == ConnectionResult.SERVICE_DISABLED){
+	    		showErrorDialog(status);
+	    	}
+	    } else {
+	      Toast.makeText(this, "This device is not supported.",
+	          Toast.LENGTH_LONG).show();
+	      finish();
+	    }
+	    //return false;
+	    
+	    //allow for run on emulator
+	    return true;
+	  }
+	  return true;
+	}
+	 
+	void showErrorDialog(int code) {
+		//thinking that this will not work on an emulated device. need to research to find out.
+		//GooglePlayServicesUtil.getErrorDialog(code, getParent(), REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
 	}
 	
 	@Override
