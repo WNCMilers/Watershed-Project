@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 
 public class MainActivity extends SherlockFragmentActivity
 {
@@ -62,6 +64,13 @@ public class MainActivity extends SherlockFragmentActivity
 						.setText("Events"),
 				Events.class, null);
 
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getSupportMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return true;
 	}
 	
 	public static class TabsAdapter extends FragmentPagerAdapter implements
