@@ -90,12 +90,10 @@ public class MainActivity extends SherlockFragmentActivity
 	private boolean checkPlayServices() {
 	  int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 	  if (status != ConnectionResult.SUCCESS) {
-	    if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-	    	if(status == ConnectionResult.SERVICE_MISSING ||
-	    	   status == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED ||
-	    	   status == ConnectionResult.SERVICE_DISABLED){
-	    		showErrorDialog(status);
-	    	}
+    	if(status == ConnectionResult.SERVICE_MISSING ||
+    	   status == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED ||
+    	   status == ConnectionResult.SERVICE_DISABLED){
+    		showErrorDialog(status);
 	    } else {
 	      Toast.makeText(this, "This device is not supported.",
 	          Toast.LENGTH_LONG).show();
@@ -111,7 +109,7 @@ public class MainActivity extends SherlockFragmentActivity
 	 
 	void showErrorDialog(int code) {
 		//thinking that this will not work on an emulated device. need to research to find out.
-		//GooglePlayServicesUtil.getErrorDialog(code, getParent(), REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
+	    GooglePlayServicesUtil.getErrorDialog(code, this, REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
 	}
 	
 	@Override
