@@ -68,6 +68,10 @@ public class MainActivity extends SherlockFragmentActivity
 					bar.newTab()
 							.setText("Events"),
 					Events.class, null);
+			mTabsAdapter.addTab(
+					bar.newTab()
+							.setText("API Test"),
+					Api_Test.class, null);
 		}
 	}
 	
