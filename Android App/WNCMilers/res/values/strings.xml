@@ -6,5 +6,72 @@
     <string name="hello_world">Hello world!</string>
     <string name="about_app">About</string>
     <string name="App_help">Help</string>
+    <string name="person_name_hint">Firstname LastName</string>
+    <string name="person_address">Address</string>
+    <string name="person_phone_number">Phone Number</string>
+    <string name="person_email_address">Email Address</string>
+    <string name="submit">Submit</string>
+    <string name="state">State</string>
+    <string name="membership_level">Membership Level</string>
 
+    <string-array name="states_array">
+		<item>AL</item>
+		<item>AK</item>
+		<item>AZ</item>
+		<item>AR</item>
+		<item>CA</item>
+		<item>CO</item>
+		<item>CT</item>
+		<item>DE</item>
+		<item>FL</item>
+		<item>GA</item>
+		<item>HI</item>
+		<item>ID</item>
+		<item>IL</item>
+		<item>IN</item>
+		<item>IA</item>
+		<item>KS</item>
+		<item>KY</item>
+		<item>LA</item>
+		<item>ME</item>
+		<item>MD</item>
+		<item>MA</item>
+		<item>MI</item>
+		<item>MN</item>
+		<item>MS</item>
+		<item>MO</item>
+		<item>MT</item>
+		<item>NE</item>
+		<item>NV</item>
+		<item>NH</item>
+		<item>NJ</item>
+		<item>NM</item>
+		<item>NY</item>
+		<item>NC</item>
+		<item>ND</item>
+		<item>OH</item>
+		<item>OK</item>
+		<item>OR</item>
+		<item>PA</item>
+		<item>RI</item>
+		<item>SC</item>
+		<item>SD</item>
+		<item>TN</item>
+		<item>TX</item>
+		<item>UT</item>
+		<item>VT</item>
+		<item>VA</item>
+		<item>WA</item>
+		<item>WV</item>
+		<item>WI</item>
+		<item>WY</item>
+    </string-array>
+    
+     <string-array name="membership_level_array">
+		<item>Scholastic - $20</item>
+		<item>Individual - $25</item>
+		<item>Family - $50</item>
+		<item>Small Business - $100</item>
+		<item>Corporation - $1000</item>
+	</string-array>
 </resources>

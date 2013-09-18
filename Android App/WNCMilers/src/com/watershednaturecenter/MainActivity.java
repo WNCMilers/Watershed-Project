@@ -72,6 +72,10 @@ public class MainActivity extends SherlockFragmentActivity
 					bar.newTab()
 							.setText("API Test"),
 					Api_Test.class, null);
+			mTabsAdapter.addTab(
+					bar.newTab()
+							.setText("Become a Member"),
+					Membership_Signup.class, null);
 		}
 	}
 	
