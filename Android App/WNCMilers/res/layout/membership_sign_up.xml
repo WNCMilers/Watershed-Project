@@ -18,64 +18,14 @@
         <requestFocus />
     </EditText>
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="@string/submit" />
-
     <EditText
         android:id="@+id/Address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/FirstNameLastName"
-        android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="@string/person_address_line1"
-        android:inputType="textPostalAddress" />
-
-    <EditText
-        android:id="@+id/ZipCode"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/StateSelection"
-        android:ems="10"
-        android:hint="@string/zipcode"
-        android:inputType="number" />
-
-    <Spinner
-        android:id="@+id/StateSelection"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Address"
-        android:layout_marginTop="40dp"
-        android:layout_toLeftOf="@+id/ZipCode"
-        android:entries="@array/states_array"
-        android:prompt="@string/state"
-        android:spinnerMode="dialog" />
-
-    <EditText
-        android:id="@+id/City"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/StateSelection"
-        android:layout_toLeftOf="@+id/StateSelection"
-        android:ems="10"
-        android:hint="@string/city" />
-
-    <EditText
-        android:id="@+id/EditText01"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/Address"
-        android:ems="10"
-        android:hint="@string/person_address_line2"
+        android:hint="@string/person_address"
         android:inputType="textPostalAddress" />
 
     <EditText
@@ -83,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/spinner1"
         android:ems="10"
         android:hint="@string/person_phone_number"
         android:inputType="phone" />
@@ -99,13 +49,31 @@
         android:inputType="textEmailAddress" />
 
     <Spinner
-        android:id="@+id/MembershipLevelSelection"
+        android:id="@+id/spinner1"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:prompt="@string/state"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/Address"
+        android:entries="@array/states_array" 
+    	android:spinnerMode="dialog" />
+
+    <Spinner
+        android:id="@+id/spinner2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/EmailAddress"
-        android:entries="@array/membership_level_array"
-        android:prompt="@string/membership_level"
-        android:spinnerMode="dialog" />
+        android:entries="@array/membership_level_array" 
+    	android:spinnerMode="dialog"
+    	android:prompt="@string/membership_level" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/submit" />
 
 </RelativeLayout>
