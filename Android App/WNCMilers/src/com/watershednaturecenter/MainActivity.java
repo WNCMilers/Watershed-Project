@@ -50,8 +50,8 @@ public class MainActivity extends SherlockFragmentActivity
 					Distance_Time.class, null);
 			mTabsAdapter.addTab(
 					bar.newTab()
-							.setText("Challenges"),
-					Challenges.class, null);
+							.setText("Map Data"),
+					MapData.class, null);
 			mTabsAdapter.addTab(
 					bar.newTab()
 							.setText("Leaderboard"),

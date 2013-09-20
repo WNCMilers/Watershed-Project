@@ -44,10 +44,10 @@ public class Distance_Time extends SherlockFragment implements LocationListener
 		map.setMyLocationEnabled(true);
 		
 		// Getting LocationManager object from System Service LOCATION_SERVICE
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        //LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         // Creating a criteria object to retrieve provider
-        Criteria criteria = new Criteria();
+        //Criteria criteria = new Criteria();
 
         // Getting the name of the best provider
         //String provider = locationManager.getBestProvider(criteria, true);
@@ -56,12 +56,12 @@ public class Distance_Time extends SherlockFragment implements LocationListener
         //Location location = locationManager.getLastKnownLocation(provider);
 
         //if(location!=null){
-            //onLocationChanged(location);
-        	LatLng latLng = new LatLng(38.81758,-89.97854);
-        	map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        	map.animateCamera(CameraUpdateFactory.zoomTo(16));
+        //    onLocationChanged(location);
+        //	LatLng latLng = new LatLng(38.81758,-89.97854);
+        //	map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        //	map.animateCamera(CameraUpdateFactory.zoomTo(16));
         //}
-        //locationManager.requestLocationUpdates(provider, 20000, 0, this);
+        //locationManager.requestLocationUpdates(provider, 2000, 0, this);
 		return view;
 	}
 	
