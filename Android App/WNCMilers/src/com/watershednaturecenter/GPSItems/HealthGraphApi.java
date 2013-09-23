@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -71,13 +72,7 @@ public class HealthGraphApi {
         String accessTokenUrl = "https://runkeeper.com/apps/token?grant_type=authorization_code&code=%s&client_id=%s&client_secret=%s&redirect_uri=%s";
         final String finalUrl = String.format(accessTokenUrl, authCode, CLIENT_ID, CLIENT_SECRET, CALLBACK_URL);
                 try {
-                    HttpClient client = new DefaultHttpClient();
-                    HttpPost post = new HttpPost(finalUrl);
-                    HttpResponse response = client.execute(post);
-                    String jsonString = EntityUtils.toString(response.getEntity());
-                    final JSONObject json = new JSONObject(jsonString);
-                    accessToken = json.getString("access_token");
- 
+                	new LoginTask().execute(finalUrl);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -237,4 +232,34 @@ public class HealthGraphApi {
 		return ja;
     }
     
+    
+    private class LoginTask extends AsyncTask<String, Integer, Double>{
+   	 
+    	@Override
+    	protected Double doInBackground(String... params) {
+    		// TODO Auto-generated method stub
+    		postData(params[0]);
+    		return null;
+    	}
+
+    	public void postData(String valueIWantToSend) {
+    		// Create a new HttpClient and Post Header
+    		HttpClient client = new DefaultHttpClient();
+            HttpPost post = new HttpPost(valueIWantToSend);
+    		try {
+                HttpResponse response = client.execute(post);
+                String jsonString = EntityUtils.toString(response.getEntity());
+                final JSONObject json = new JSONObject(jsonString);
+                accessToken = json.getString("access_token");
+
+    		} catch (Exception e) {
+    			// TODO Auto-generated catch block
+    		}
+    	}
+
+    }
+    
 }
+
+
+
