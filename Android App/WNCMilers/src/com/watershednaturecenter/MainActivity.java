@@ -52,18 +52,18 @@ public class MainActivity extends SherlockFragmentActivity
 					bar.newTab()
 							.setText("Map Data"),
 					MapData.class, null);
-			mTabsAdapter.addTab(
-					bar.newTab()
-							.setText("Leaderboard"),
-					Leaderboard.class, null);
-			mTabsAdapter.addTab(
-					bar.newTab()
-							.setText("My Stats"),
-					Stats.class, null);
-			mTabsAdapter.addTab(
-					bar.newTab()
-							.setText("Photos"),
-					Photos.class, null);
+//			mTabsAdapter.addTab(
+//					bar.newTab()
+//							.setText("Leaderboard"),
+//					Leaderboard.class, null);
+//			mTabsAdapter.addTab(
+//					bar.newTab()
+//							.setText("My Stats"),
+//					Stats.class, null);
+//			mTabsAdapter.addTab(
+//					bar.newTab()
+//							.setText("Photos"),
+//					Photos.class, null);
 			mTabsAdapter.addTab(
 					bar.newTab()
 							.setText("Events"),
