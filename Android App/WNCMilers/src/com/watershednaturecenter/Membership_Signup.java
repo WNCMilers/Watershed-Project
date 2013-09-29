@@ -1,11 +1,18 @@
 package com.watershednaturecenter;
 
+import java.util.regex.Pattern;
+
 import com.actionbarsherlock.app.SherlockFragment;
+
+import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -13,6 +20,12 @@ import android.widget.Toast;
 
 public class Membership_Signup extends SherlockFragment
 {
+	// Regular Expression
+    private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final String PHONE_REGEX = "\\d{3}-\\d{3}-\\d{4}";
+    private static final String ZIP_REGEX = "\\d{5}";
+    private static final String CITY_REGEX = "^(?:[a-zA-Z]+(?:[.'\\-,])?\\s?)+$";
+    
 	private String fullName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
 	private Button submitButton;
 	private EditText nameField, addressLine1Field, addressLine2Field, cityField, zipCodeField, phoneNumberField, emailAddressField;
@@ -37,7 +50,11 @@ public class Membership_Signup extends SherlockFragment
 		submitButton = (Button) view.findViewById(R.id.submitButton);
 		submitButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-            	Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
+            	//Hides softKeyboard
+            	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
+            		
+              	Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
             	getDataFromForm();
         	}
         });
@@ -56,43 +73,80 @@ public class Membership_Signup extends SherlockFragment
 		emailAddress = emailAddressField.getText().toString().trim();
 		membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
 		
-		if (!checkForBlankRequiredFields()){
+		if (!completeFormValidityCheck()){
 			Toast.makeText(getSherlockActivity(), "Thanks " + fullName, Toast.LENGTH_SHORT).show();
 		}
 	}
 	
-	public boolean checkForBlankRequiredFields(){
+	public boolean completeFormValidityCheck(){
 		boolean errorPresent = false;
 		
 		if (fullName.isEmpty()){
+			nameField.setError(null);
 			nameField.setError("Name cannot be blank");
 			errorPresent = true;
 		}
+		
 		if (addressLine1.isEmpty()){
+			addressLine1Field.setError(null);
 			addressLine1Field.setError("Address Line 1 cannot be blank");
 			errorPresent = true;
 		}
+		
 		if (city.isEmpty()){
+			cityField.setError(null);
 			cityField.setError("City cannot be blank");
 			errorPresent = true;
 		}
+		else {
+			if(!checkValidity(CITY_REGEX, city)){
+				cityField.setError(null);
+				cityField.setError("Improper City Name Format");
+			}
+		}
+		
 		if (zipCode.isEmpty()){
+			zipCodeField.setError(null);
 			zipCodeField.setError("Zip code cannot be blank");
 			errorPresent = true;
+		} else {
+			if(!checkValidity(ZIP_REGEX, zipCode)){
+				zipCodeField.setError(null);
+				zipCodeField.setError("Improper format. Ex: 62025");
+			}
 		}
+		
 		if (phoneNumber.isEmpty()){
+			phoneNumberField.setError(null);
 			phoneNumberField.setError("Phone Number cannot be blank");
 			errorPresent = true;
 		}
+		else {
+			if(!checkValidity(PHONE_REGEX, phoneNumber)){
+				phoneNumberField.setError(null);
+				phoneNumberField.setError("Improper format. Ex: 555-555-5555");
+			}
+		}
+		
 		if (emailAddress.isEmpty()){
+			emailAddressField.setError(null);
 			emailAddressField.setError("Email Address cannot be blank");
 			errorPresent = true;
+		} else {
+			if(!checkValidity(EMAIL_REGEX, emailAddress)){
+				emailAddressField.setError(null);
+				emailAddressField.setError("Improper format. Ex: john@domain.com");
+			}
 		}
 		
 		if (errorPresent){
 			Toast.makeText(getSherlockActivity(), "Please correct error on form", Toast.LENGTH_SHORT).show();
 		}
 		return errorPresent;
+	}
+	
+	public boolean checkValidity(String regex, String text){
+		return Pattern.matches(regex, text);
 	}
 	
 	public void sendRegistrationForm(){

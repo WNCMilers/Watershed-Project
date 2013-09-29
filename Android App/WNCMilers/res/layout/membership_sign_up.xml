@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  
-    xmlns:android="http://schemas.android.com/apk/res/android"  
-    android:id="@+id/ScrollView01"  
-    android:layout_width="wrap_content"  
-    android:layout_height="wrap_content"  
-    android:scrollbars="vertical">  
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical" >
+
 	<RelativeLayout
 	    android:id="@+id/membership_sign_up"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+	    android:layout_height="460dp"
 	    android:orientation="vertical" >
 	
 	    <EditText
@@ -41,15 +41,6 @@
 	        android:entries="@array/membership_level_array"
 	        android:prompt="@string/membership_level"
 	        android:spinnerMode="dialog" />
-	
-	    <Button
-	        android:id="@+id/submitButton"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_below="@+id/MembershipLevelSelection"
-	        android:layout_marginTop="43dp"
-	        android:text="@string/submit" />
 	
 	    <EditText
 	        android:id="@+id/FirstNameLastName"
@@ -117,6 +108,14 @@
 	        android:ems="10"
 	        android:hint="@string/zip_code"
 	        android:inputType="number" />
+
+	    <Button
+	        android:id="@+id/submitButton"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/submit" />
 	
 	</RelativeLayout>
 </ScrollView>
