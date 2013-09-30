@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,23 +15,26 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.watershednaturecenter.GPSItems.CoordinateInformation;
 import com.watershednaturecenter.GPSItems.HealthGraphApi;
+import com.watershednaturecenter.GPSItems.WorkoutInfo;
 
 public class MapData extends SherlockFragment implements LocationListener
 {
-	private WebView runKeeperwebView;
-	private Button StartButton;
-	private Button StopButton;
-	private Button PostButton;
-	
+	private Button Start_StopButton;
+	private Button SubmitWorkout;
+	private Chronometer WorkoutTimer;
+	private Spinner WorkoutType;
 	
 	
 	private LocationManager locationManager;
 	private HealthGraphApi APIWORKER;
+	private WorkoutInfo currentWorkoutInfo;
 	
 	private ArrayList<CoordinateInformation> LocationArray = new ArrayList<CoordinateInformation>();
 	@Override
@@ -39,29 +43,26 @@ public class MapData extends SherlockFragment implements LocationListener
 	{
 		
 		View view = inflater.inflate(R.layout.mapdata, container, false);
-		runKeeperwebView = (WebView) view.findViewById(R.id.webView);
-		APIWORKER = new HealthGraphApi(runKeeperwebView);
-		APIWORKER.LoginPrompt();
-		StartButton = (Button) view.findViewById(R.id.btnStartTracking);
-		StartButton.setOnClickListener(new OnClickListener()
+		//runKeeperwebView = (WebView) view.findViewById(R.id.webView);
+		APIWORKER = ((WNC_MILERS) getActivity().getApplication()).get_APIWORKER();
+		
+		WorkoutTimer = (Chronometer) view.findViewById(R.id.WorkoutTimer);
+		WorkoutType = (Spinner) view.findViewById(R.id.WorkoutType);
+	
+		Start_StopButton = (Button) view.findViewById(R.id.Start_StopWorkout);
+		Start_StopButton.setOnClickListener(new OnClickListener()
 		{
 		public void onClick(View v)
 		{
-			 onClickStartTrackingBtn();
+			 onClickStart_StopTrackingBtn();
 		}});
-		StopButton = (Button) view.findViewById(R.id.btnStopTracking);
-		StopButton.setOnClickListener(new OnClickListener()
+		SubmitWorkout = (Button) view.findViewById(R.id.SubmitWorkout);
+		SubmitWorkout.setEnabled(false);
+		SubmitWorkout.setOnClickListener(new OnClickListener()
 		{
 		public void onClick(View v)
 		{
-			 onClickStopTrackingBtn();
-		}});
-		PostButton = (Button) view.findViewById(R.id.btnPost);
-		PostButton.setOnClickListener(new OnClickListener()
-		{
-		public void onClick(View v)
-		{
-			 onClickPostBtn();
+			 onClickSubmitWorkout();
 		}});
 		
 		
@@ -69,26 +70,44 @@ public class MapData extends SherlockFragment implements LocationListener
 		return view;
 	}
 	
-	public void onClickStartTrackingBtn() 
+	public void onClickStart_StopTrackingBtn() 
 	{
-		//reset Coordinate list each time
-		LocationArray = new ArrayList<CoordinateInformation>();
-		// Getting LocationManager object from System Service LOCATION_SERVICE. Need to mess with parameters to not record quite as many points.
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
 		
-		Toast.makeText(getSherlockActivity(), "Start Button Clicked", Toast.LENGTH_SHORT).show();
+		if (Start_StopButton.getText().equals("Start Workout"))
+		{
+			//initialize currentworkoutinfo to selected workout criteria.
+			currentWorkoutInfo = new WorkoutInfo(WorkoutType.getSelectedItem().toString(),"None","");
+			WorkoutTimer.setBase(SystemClock.elapsedRealtime());
+			WorkoutTimer.start();
+			//reset Coordinate list each time
+			LocationArray = new ArrayList<CoordinateInformation>();
+			// Getting LocationManager object from System Service LOCATION_SERVICE. Need to mess with parameters to not record quite as many points.
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
+			Toast.makeText(getSherlockActivity(), "Begining Workout", Toast.LENGTH_SHORT).show();
+			Start_StopButton.setText("Stop Workout");
+			SubmitWorkout.setEnabled(false);
+		}
+		else
+		{
+			WorkoutTimer.stop();
+			locationManager.removeUpdates(this);
+			Toast.makeText(getSherlockActivity(), "Workout Stopped", Toast.LENGTH_SHORT).show();
+			Start_StopButton.setText("Start Workout");
+			SubmitWorkout.setEnabled(true);
+		}
+				
+		
 	}
 	
 	public void onClickStopTrackingBtn() 
 	{
-		locationManager.removeUpdates(this);
-		Toast.makeText(getSherlockActivity(), "Stop Button Clicked", Toast.LENGTH_SHORT).show();
+		
 		
 	}
-	public void onClickPostBtn() 
+	public void onClickSubmitWorkout() 
 	{
-		if (APIWORKER.GetaccesToken() == null)
-				Toast.makeText(getSherlockActivity(), "Not logged in yet", Toast.LENGTH_SHORT).show();
+		if (APIWORKER == null)
+				Toast.makeText(getSherlockActivity(), "You must login first", Toast.LENGTH_SHORT).show();
 		else
 		{
 			//BELOW WAS just a test to get number miles walked
@@ -97,7 +116,9 @@ public class MapData extends SherlockFragment implements LocationListener
 			//Toast.makeText(getSherlockActivity(), milesWalkedMessage, Toast.LENGTH_SHORT).show();
 			
 			//Posts the workout for the coordinates gathered between start and stop
-			APIWORKER.PostWorkout(LocationArray);
+			//
+			APIWORKER.PostWorkout(LocationArray,currentWorkoutInfo);
+			Toast.makeText(getSherlockActivity(), "Workout Posted", Toast.LENGTH_SHORT).show();
 		}
 			
 	}

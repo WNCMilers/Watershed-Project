@@ -78,5 +78,15 @@
 		<item>Small Business - $100</item>
 		<item>Corporation - $1000</item>
 	</string-array>
+<<<<<<< HEAD
+		<string name="zip_code">Zip Code</string>
+		<string name="city">City</string>
+		<string name="runkeeperlogin">Login</string>
+		<string-array name="workoutType_array">
+			<item >Running</item>
+			<item >Walking</item>
+		</string-array>
+=======
 		
+>>>>>>> 34db7aa7cf938086b14ddfa4b06ab2f005bc735e
 </resources>
