@@ -20,9 +20,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.watershednaturecenter.Login;
+import com.watershednaturecenter.MainActivity;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.text.format.Time;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -33,6 +39,7 @@ import android.webkit.WebViewClient;
 
 public class HealthGraphApi {
 	private WebView RunKeeperWebView;
+	private Activity calledfrom;
 	private String authCode;
 	private String accessToken;
 	private final static String CLIENT_ID = "370386b2c7bc4dad9456ee168d812be0";
@@ -40,11 +47,12 @@ public class HealthGraphApi {
     private final static String CALLBACK_URL = "http://www.watershednaturecenter.uri/callback";
     
     @SuppressLint("SetJavaScriptEnabled")
-	public HealthGraphApi(WebView webView)
+	public HealthGraphApi(WebView webView, Activity activity)
 	{
     	CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
         RunKeeperWebView = webView;
+        calledfrom = activity; 
 		//This is important. JavaScript is disabled by default. Enable it.
         webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setJavaScriptEnabled(true);
@@ -166,7 +174,7 @@ public class HealthGraphApi {
     }
     
     
-    public void PostWorkout(ArrayList<CoordinateInformation> LocationArray)
+    public void PostWorkout(ArrayList<CoordinateInformation> LocationArray, WorkoutInfo WI)
     {
     	try{
     	HttpClient client = new DefaultHttpClient();
@@ -177,22 +185,24 @@ public class HealthGraphApi {
     	
     	
     	JSONObject j = new JSONObject();
-    	j.put("type", "Walking");
-    	j.put("equipment", "None");
-    	j.put("start_time", "Sat, 1 Jan 2011 00:00:00");
-    	j.put("notes", "None");
+    	j.put("type", WI.GetWorkoutType());
+    	j.put("equipment", WI.GetEquipmentUsed());
+    	j.put("start_time", BuildTime(WI.GetStartTime()));
+    	j.put("notes", WI.GetWorkoutNotes());
     	j.put("path", BuildPathParm(LocationArray));
     	StringEntity se = new StringEntity( j.toString());
         post.setEntity(se);
-        HttpResponse response = client.execute(post);
+        
+        try {
+        	new ActivityPostTask().execute(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     	}
     	catch(Exception e)
     	{
-    		//Catch Exception here
+    		e.printStackTrace();
     	}
-    	
-    	
-    	
     }
     
     
@@ -232,6 +242,77 @@ public class HealthGraphApi {
 		return ja;
     }
     
+    private String BuildTime(Time t)
+    {
+    	//Sat, 1 Jan 2011 00:00:00
+    	String TimeString = "";
+    	switch (t.weekDay)
+    	{
+    	case 0:
+    		TimeString += "Sun, " + t.monthDay;
+    		break;
+    	case 1:
+    		TimeString += "Mon, " + t.monthDay;
+    		break;
+    	case 2:
+    		TimeString += "Tue, " + t.monthDay;
+    		break;
+    	case 3:
+    		TimeString += "Wed, " + t.monthDay;
+    		break;
+    	case 4:
+    		TimeString += "Thu, " + t.monthDay;
+    		break;
+    	case 5:
+    		TimeString += "Fri, " + t.monthDay;
+    		break;
+    	case 6:
+    		TimeString += "Sat, " + t.monthDay;
+    		break;
+    	}
+    	switch (t.month)
+    	{
+    	case 0:
+    		TimeString += " Jan " + t.year;
+    		break;
+    	case 1:
+    		TimeString += " Feb " + t.year;
+    		break;
+    	case 2:
+    		TimeString += " Mar " + t.year;
+    		break;
+    	case 3:
+    		TimeString += " Apr " + t.year;
+    		break;
+    	case 4:
+    		TimeString += " May " + t.year;
+    		break;
+    	case 5:
+    		TimeString += " Jun " + t.year;
+    		break;
+    	case 6:
+    		TimeString += " Jul " + t.year;
+    		break;
+    	case 7:
+    		TimeString += " Aug " + t.year;
+    		break;
+    	case 8:
+    		TimeString += " Sep " + t.year;
+    		break;
+    	case 9:
+    		TimeString += " Oct " + t.year;
+    		break;
+    	case 10:
+    		TimeString += " Nov " + t.year;
+    		break;
+    	case 11:
+    		TimeString += " Dec " + t.year;
+    		break;
+    	}
+    	TimeString += " " + t.hour + ":" + t.minute + ":" + t.second;
+    	return TimeString;
+    }
+    
     
     private class LoginTask extends AsyncTask<String, Integer, Double>{
    	 
@@ -251,7 +332,31 @@ public class HealthGraphApi {
                 String jsonString = EntityUtils.toString(response.getEntity());
                 final JSONObject json = new JSONObject(jsonString);
                 accessToken = json.getString("access_token");
+                calledfrom.startActivity(new Intent(calledfrom, MainActivity.class));
 
+    		} catch (Exception e) {
+    			// TODO Auto-generated catch block
+    		}
+    	}
+
+    }
+    
+    
+    private class ActivityPostTask extends AsyncTask<HttpPost, Integer, Double>{
+      	 
+    	@Override
+    	protected Double doInBackground(HttpPost... params) {
+    		// TODO Auto-generated method stub
+    		postData(params[0]);
+    		return null;
+    	}
+
+    	public void postData(HttpPost valueIWantToSend) {
+    		// Create a new HttpClient and Post Header
+    		HttpClient client = new DefaultHttpClient();
+    		try {
+                HttpResponse response = client.execute(valueIWantToSend);
+                
     		} catch (Exception e) {
     			// TODO Auto-generated catch block
     		}
