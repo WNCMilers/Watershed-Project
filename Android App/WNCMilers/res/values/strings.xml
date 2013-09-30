@@ -6,7 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="about_app">About</string>
     <string name="App_help">Help</string>
-    <string name="person_name_hint">Firstname LastName</string>
     <string name="person_address">Address Line 1</string>
     <string name="person_address_line2">Address Line 2</string>
     <string name="person_phone_number">Phone Number</string>
@@ -14,6 +13,10 @@
     <string name="submit">Submit</string>
     <string name="state">State</string>
     <string name="membership_level">Membership Level</string>
+    <string name="zip_code">Zip Code</string>
+	<string name="city">City</string>
+	<string name="first_Name">First Name</string>
+	<string name="last_Name">Last Name</string>
 
     <string-array name="states_array">
 		<item>AL</item>
@@ -75,6 +78,5 @@
 		<item>Small Business - $100</item>
 		<item>Corporation - $1000</item>
 	</string-array>
-		<string name="zip_code">Zip Code</string>
-		<string name="city">City</string>
+		
 </resources>

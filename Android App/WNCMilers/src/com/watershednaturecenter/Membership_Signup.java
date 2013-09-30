@@ -2,21 +2,19 @@ package com.watershednaturecenter;
 
 import java.util.regex.Pattern;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockFragment;
 
 public class Membership_Signup extends SherlockFragment
 {
@@ -26,9 +24,9 @@ public class Membership_Signup extends SherlockFragment
     private static final String ZIP_REGEX = "\\d{5}";
     private static final String CITY_REGEX = "^(?:[a-zA-Z]+(?:[.'\\-,])?\\s?)+$";
     
-	private String fullName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
+	private String firstName, lastName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
 	private Button submitButton;
-	private EditText nameField, addressLine1Field, addressLine2Field, cityField, zipCodeField, phoneNumberField, emailAddressField;
+	private EditText firstNameField, lastNameField, addressLine1Field, addressLine2Field, cityField, zipCodeField, phoneNumberField, emailAddressField;
 	private Spinner stateSpinner, membershipLevelSpinner;
 	
 	@Override
@@ -37,7 +35,8 @@ public class Membership_Signup extends SherlockFragment
 	{
 		View view = inflater.inflate(R.layout.membership_sign_up, container, false);
 		
-		nameField = (EditText) view.findViewById(R.id.FirstNameLastName);
+		firstNameField = (EditText) view.findViewById(R.id.firstName);
+		lastNameField = (EditText) view.findViewById(R.id.lastName);
 		addressLine1Field = (EditText) view.findViewById(R.id.addressLine1);
 		addressLine2Field = (EditText) view.findViewById(R.id.addressLine2);
 		cityField = (EditText) view.findViewById(R.id.CityTextBox);
@@ -63,7 +62,8 @@ public class Membership_Signup extends SherlockFragment
 	
 	//Function to load data from the textFields/Spinners into local variables
 	public void getDataFromForm(){
-		fullName = nameField.getText().toString().trim();
+		firstName = firstNameField.getText().toString().trim();
+		lastName = lastNameField.getText().toString().trim();
 		addressLine1 = addressLine1Field.getText().toString().trim();
 		addressLine2 = addressLine2Field.getText().toString().trim();
 		city = cityField.getText().toString().trim();
@@ -74,16 +74,21 @@ public class Membership_Signup extends SherlockFragment
 		membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
 		
 		if (!completeFormValidityCheck()){
-			Toast.makeText(getSherlockActivity(), "Thanks " + fullName, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getSherlockActivity(), "Thanks " + firstName + " " + lastName, Toast.LENGTH_SHORT).show();
 		}
 	}
 	
 	public boolean completeFormValidityCheck(){
 		boolean errorPresent = false;
 		
-		if (fullName.isEmpty()){
-			nameField.setError(null);
-			nameField.setError("Name cannot be blank");
+		if (firstName.isEmpty()){
+			firstNameField.setError(null);
+			firstNameField.setError("First name cannot be blank");
+			errorPresent = true;
+		}
+		if (lastName.isEmpty()){
+			lastNameField.setError(null);
+			lastNameField.setError("Last name cannot be blank");
 			errorPresent = true;
 		}
 		
@@ -150,6 +155,6 @@ public class Membership_Signup extends SherlockFragment
 	}
 	
 	public void sendRegistrationForm(){
-		Toast.makeText(getSherlockActivity(), "Thanks " + fullName, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(getSherlockActivity(), "Thanks " + fullName, Toast.LENGTH_SHORT).show();
 	}
 }
