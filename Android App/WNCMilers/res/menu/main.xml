@@ -11,5 +11,6 @@
         android:showAsAction="never"
         android:title="@string/about_app"/>
      <item android:id="@+id/help" android:title="@string/App_help" android:orderInCategory="102" android:showAsAction="never"></item>
+     <item android:id="@+id/login" android:title="@string/runkeeperlogin" android:orderInCategory="103" android:showAsAction="never"></item>
 
 </menu>

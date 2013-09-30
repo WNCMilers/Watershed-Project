@@ -17,6 +17,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -45,9 +46,9 @@ public class MainActivity extends SherlockFragmentActivity
 	
 			mTabsAdapter = new TabsAdapter(this, mViewPager);
 	
-			mTabsAdapter.addTab(
-					bar.newTab().setText("Tracking"),
-					Distance_Time.class, null);
+			//mTabsAdapter.addTab(
+					//bar.newTab().setText("Tracking"),
+					//Distance_Time.class, null);
 			mTabsAdapter.addTab(
 					bar.newTab()
 							.setText("Map Data"),
@@ -72,6 +73,8 @@ public class MainActivity extends SherlockFragmentActivity
 					bar.newTab()
 							.setText("Become a Member"),
 					Membership_Signup.class, null);
+		
+		
 		}
 	}
 	
@@ -120,6 +123,20 @@ public class MainActivity extends SherlockFragmentActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getSupportMenuInflater();
 	    inflater.inflate(R.menu.main, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.login:
+	    	//setContentView(R.layout.login);
+	    	Intent i = new Intent(this, Login.class);
+	    	startActivity(i);
+        
+	    	
+	}
 	    return true;
 	}
 	
@@ -211,4 +228,6 @@ public class MainActivity extends SherlockFragmentActivity
 		{
 		}
 	}
+	
+	
 }
