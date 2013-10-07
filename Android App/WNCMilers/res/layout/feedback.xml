@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:isScrollContainer="true"
+    android:scrollbars="vertical" >
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+	
+	    <TextView
+	        android:id="@+id/feedbackPrompt"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/Feedback_Prompt"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	    <Button
+	        android:id="@+id/feedbackSubmitButton"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/submit" />
+	
+	    <EditText
+	        android:id="@+id/feedbackDetails"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_above="@+id/feedbackSubmitButton"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/feedbackType"
+	        android:ems="10"
+	        android:hint="@string/feedback_details"
+	        android:inputType="textMultiLine"
+	        android:lines="5" />
+	
+	    <EditText
+	        android:id="@+id/yourNameFeedback"
+	        android:layout_width="match_parent"
+	        android:layout_height="45dp"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/feedbackPrompt"
+	        android:ems="10"
+	        android:hint="@string/your_name"
+	        android:inputType="textPersonName"
+	        android:paddingLeft="10dp" >
+	
+	        <requestFocus />
+	    </EditText>
+	
+	    <EditText
+	        android:id="@+id/yourEmailFeedback"
+	        android:layout_width="match_parent"
+	        android:layout_height="45dp"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/yourNameFeedback"
+	        android:ems="10"
+	        android:hint="@string/your_email"
+	        android:inputType="textEmailAddress" />
+	
+	    <Spinner
+	        android:id="@+id/feedbackType"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/yourEmailFeedback"
+	        android:entries="@array/feedback_Type"
+	        android:spinnerMode="dialog"  />
+	
+	</RelativeLayout>
+</ScrollView>

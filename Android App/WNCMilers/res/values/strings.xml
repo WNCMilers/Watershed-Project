@@ -85,4 +85,14 @@
 		<item >Running</item>
 		<item >Walking</item>
 	</string-array>
+		<string name="Feedback_Prompt">Enter feedback details to send to the developers:</string>
+		<string name="your_name">Your Name</string>
+		<string name="your_email">Your Email (optional)</string>
+	<string-array name="feedback_Type">
+		<item>Appreciation</item>
+		<item>Suggestion</item>
+		<item>Complaint</item>
+		<item>Bug Report</item>
+	</string-array>
+		<string name="feedback_details">Feedback Details</string>
 </resources>

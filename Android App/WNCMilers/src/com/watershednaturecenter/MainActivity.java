@@ -73,9 +73,11 @@ public class MainActivity extends SherlockFragmentActivity
 					bar.newTab()
 							.setText("Become a Member"),
 					Membership_Signup.class, null);
-		
-		
-		}
+			mTabsAdapter.addTab(
+					bar.newTab()
+							.setText("Feedback"),
+					Feedback.class, null);
+				}
 	}
 	
 	static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
