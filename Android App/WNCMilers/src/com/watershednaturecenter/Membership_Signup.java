@@ -46,6 +46,8 @@ public class Membership_Signup extends SherlockFragment
 		emailAddressField = (EditText) view.findViewById(R.id.EmailAddress);
 		membershipLevelSpinner = (Spinner) view.findViewById(R.id.MembershipLevelSelection);
 		
+		stateSpinner.setSelection(13);
+		
 		submitButton = (Button) view.findViewById(R.id.submitButton);
 		submitButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
