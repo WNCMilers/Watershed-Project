@@ -30,6 +30,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.watershednaturecenter.GPSItems.CoordinateInformation;
 import com.watershednaturecenter.GPSItems.HealthGraphApi;
 import com.watershednaturecenter.GPSItems.MockLocationProvider;
+import com.watershednaturecenter.GPSItems.Polygon;
 import com.watershednaturecenter.GPSItems.WorkoutInfo;
 
 public class Workout extends SherlockFragment implements LocationListener {
@@ -47,7 +48,9 @@ public class Workout extends SherlockFragment implements LocationListener {
 
 	private LocationManager locationManager;
 	private HealthGraphApi APIWORKER;
-	private WorkoutInfo currentWorkoutInfo;
+	private WorkoutInfo currentWorkoutInfoWNC;
+	private WorkoutInfo currentWorkoutInfoRK;
+	private Polygon WNCboundaries;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +64,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 		// runKeeperwebView = (WebView) view.findViewById(R.id.webView);
 		APIWORKER = ((WNC_MILERS) getActivity().getApplication())
 				.get_APIWORKER();
+		WNCboundaries = ((WNC_MILERS) getActivity().getApplication())
+				.get_WNCboundaries();
 
 		WorkoutTimer = (Chronometer) view.findViewById(R.id.WorkoutTimer);
 		WorkoutType = (Spinner) view.findViewById(R.id.WorkoutType);
@@ -90,20 +95,23 @@ public class Workout extends SherlockFragment implements LocationListener {
 		if (Start_StopButton.getText().equals("Start Workout")) {
 			Criteria gpsCriteria = getGpsCriteria();
 			// initialize currentworkoutinfo to selected workout criteria.
-			currentWorkoutInfo = new WorkoutInfo(WorkoutType.getSelectedItem()
+			currentWorkoutInfoWNC = new WorkoutInfo(WorkoutType.getSelectedItem()
+					.toString(), "None", "");
+			currentWorkoutInfoRK = new WorkoutInfo(WorkoutType.getSelectedItem()
 					.toString(), "None", "");
 			((WNC_MILERS) getActivity().getApplication())
-					.set_CurrentWorkout(currentWorkoutInfo);
+					.set_CurrentWorkouts(currentWorkoutInfoWNC,currentWorkoutInfoRK);
 
 			// reset Coordinate list each time
-			currentWorkoutInfo.LocationArray = new ArrayList<CoordinateInformation>();
+			currentWorkoutInfoWNC.LocationArray = new ArrayList<CoordinateInformation>();
+			currentWorkoutInfoRK.LocationArray = new ArrayList<CoordinateInformation>();
 			// Getting LocationManager object from System Service
 			// LOCATION_SERVICE. Need to mess with parameters to not record
 			// quite as many points.
 
 			locationManager.requestLocationUpdates(
 					LocationManager.GPS_PROVIDER, 3000, 3, this);
-			locationManager.requestLocationUpdates(LocationManager.getBestProvider(gpsCriteria,true),3000,3,this);
+			locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
 
 			// Push Locations
 			//try {
@@ -161,8 +169,11 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// Posts the workout for the coordinates gathered between start and
 			// stop
 			//
-			APIWORKER.PostWorkout(currentWorkoutInfo.LocationArray,
-					currentWorkoutInfo);
+			APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,
+					currentWorkoutInfoRK);
+			//TODO: Add Check to see if any distance was done inside WNC if so, submit to database.
+			
+			
 			Toast.makeText(getSherlockActivity(), "Workout Posted",
 					Toast.LENGTH_SHORT).show();
 		}
@@ -177,19 +188,33 @@ public class Workout extends SherlockFragment implements LocationListener {
 			WorkoutTimer.start();
 			progress.dismiss();
 		}
-
+		
+		
 		CoordinateInformation CurrentLocation = new CoordinateInformation();
 		CurrentLocation.SetLatitude(location.getLatitude());
 		CurrentLocation.SetLongitude(location.getLongitude());
 		CurrentLocation.SetAltitude(location.getAltitude());
 		CurrentLocation.SetCurrentDateTime();
-		currentWorkoutInfo.LocationArray.add(CurrentLocation);
-		currentWorkoutInfo.UpdateDistTraveled();
+		
+		//Check to see if user is in WNC
+		if (WNCboundaries.contains(CurrentLocation.GetLatitude(), CurrentLocation.GetLongitude()))
+		{
+			//add to both Run keeper location array, and WNCMilers Location Array
+			currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
+			currentWorkoutInfoWNC.UpdateDistTraveled();
+			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
+			currentWorkoutInfoRK.UpdateDistTraveled();
+		}
+		else//Just add into Run Keeper Location Array
+		{
+			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
+			currentWorkoutInfoRK.UpdateDistTraveled();
+		}
 
 		//String message =
 		//String.format("New Location \n Longitude: %1$s \n Latitude: %2$s",
 		//CurrentLocation.GetLongitude(), CurrentLocation.GetLatitude());
-		double Distance = currentWorkoutInfo.GetCurDistTraveled();
+		double Distance = currentWorkoutInfoRK.GetCurDistTraveled();
 		lblDist.setText(Double.toString(Distance) + " miles");
 		
 		long timeElapsed = SystemClock.elapsedRealtime() - WorkoutTimer.getBase();
