@@ -7,9 +7,10 @@ import com.watershednaturecenter.GPSItems.WorkoutInfo;
 import android.app.Application;
 
 public class WNC_MILERS extends Application{
+	private static WNC_MILERS applicationContext;
 	private HealthGraphApi APIWORKER;
-	private WorkoutInfo CurrentWorkoutWNC;
-	private WorkoutInfo CurrentWorkoutRK;
+	private WorkoutInfo CurrentWorkoutWNC = new WorkoutInfo();
+	private WorkoutInfo CurrentWorkoutRK = new WorkoutInfo();
 	double [] lat = {38.816288,38.815678,38.815686,38.818244,38.819690,38.818696,38.816288};
 	double [] Lon = {-89.981675,-89.979873,-89.975753,-89.975163,-89.978596,-89.982533,-89.981675};
 	private Polygon WNCBoundaries = new Polygon(lat,Lon, 6);
@@ -38,5 +39,14 @@ public class WNC_MILERS extends Application{
     public Polygon get_WNCboundaries() {
         return WNCBoundaries;
     }
+    
+ // Returns the application instance 
+    public static WNC_MILERS getInstance() {
+        return applicationContext;
+    }
+
+    public final void onCreate() {
+        super.onCreate(); applicationContext = this;
+    } 
 
 }

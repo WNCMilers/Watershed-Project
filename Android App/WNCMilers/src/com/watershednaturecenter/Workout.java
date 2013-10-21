@@ -55,7 +55,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+		currentWorkoutInfoWNC = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutWNC();
+		currentWorkoutInfoRK = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutRK(); 
 		
 		View view = inflater.inflate(R.layout.workout, container, false);
 		lblDist = (TextView) view.findViewById(R.id.lblDist);
@@ -94,11 +95,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 
 		if (Start_StopButton.getText().equals("Start Workout")) {
 			Criteria gpsCriteria = getGpsCriteria();
-			// initialize currentworkoutinfo to selected workout criteria.
-			currentWorkoutInfoWNC = new WorkoutInfo(WorkoutType.getSelectedItem()
-					.toString(), "None", "");
-			currentWorkoutInfoRK = new WorkoutInfo(WorkoutType.getSelectedItem()
-					.toString(), "None", "");
+			
 			((WNC_MILERS) getActivity().getApplication())
 					.set_CurrentWorkouts(currentWorkoutInfoWNC,currentWorkoutInfoRK);
 
@@ -171,6 +168,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 			//
 			APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,
 					currentWorkoutInfoRK);
+			MySQLConnector MYSQLCOMM = new MySQLConnector();
+			MYSQLCOMM.UpdateMiles();
 			//TODO: Add Check to see if any distance was done inside WNC if so, submit to database.
 			
 			
