@@ -11,6 +11,7 @@ public class WorkoutInfo {
 	 private String WorkoutNotes;
 	 private double CurDistTraveled;
 	 private double CurPace;
+	 private Integer RK_ID;
 	 
 	 public ArrayList<CoordinateInformation> LocationArray = new ArrayList<CoordinateInformation>();
 	    
@@ -57,6 +58,10 @@ public class WorkoutInfo {
 	{
 		CurPace = pace;
 	}
+	public void SetRK_ID(Integer ID)
+	{
+		RK_ID= ID;
+	}
 	
 	public String GetWorkoutType()
 	{
@@ -84,6 +89,10 @@ public class WorkoutInfo {
 	public double GetCurDistTraveled()
 	{
 		return CurDistTraveled;
+	}
+	public Integer getRK_ID()
+	{
+		return RK_ID;
 	}
 	
 	public void UpdateDistTraveled()

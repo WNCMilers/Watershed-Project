@@ -1,30 +1,22 @@
 package com.watershednaturecenter.GPSItems;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.watershednaturecenter.Login;
-import com.watershednaturecenter.MainActivity;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -33,6 +25,9 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.watershednaturecenter.MainActivity;
+import com.watershednaturecenter.WNC_MILERS;
 //extra imports
 
 
@@ -332,6 +327,7 @@ public class HealthGraphApi {
                 String jsonString = EntityUtils.toString(response.getEntity());
                 final JSONObject json = new JSONObject(jsonString);
                 accessToken = json.getString("access_token");
+                new getRKlogin().execute("null");
                 calledfrom.startActivity(new Intent(calledfrom, MainActivity.class));
 
     		} catch (Exception e) {
@@ -360,6 +356,35 @@ public class HealthGraphApi {
     		} catch (Exception e) {
     			// TODO Auto-generated catch block
     		}
+    	}
+
+    }
+    
+    private class getRKlogin extends AsyncTask<String, String, String>{
+    	Context context = WNC_MILERS.getInstance();
+    	WorkoutInfo currentWorkout = ((WNC_MILERS) context).get_CurrentWorkoutWNC(); 
+    	
+    	@Override
+    	protected String doInBackground(String... params) {
+    		try {
+                HttpClient client = new DefaultHttpClient();
+                HttpGet get = new HttpGet("http://api.runkeeper.com/user");
+                
+                get.addHeader("Authorization", "Bearer " + accessToken);
+                get.addHeader("Accept", "*/*");
+                
+                HttpResponse response = client.execute(get);
+                
+                
+                
+                String jsonString = EntityUtils.toString(response.getEntity());
+                //JSONArray jsonArray = new JSONArray(jsonString);
+                currentWorkout.SetRK_ID(Integer.parseInt(jsonString.substring(jsonString.indexOf("userID")+8, jsonString.indexOf("userID")+16)));
+     
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    		return null;
     	}
 
     }
