@@ -44,7 +44,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	
 
 	// FOR pushing MOCK LOCATIOn
-	//MockLocationProvider mock;
+	MockLocationProvider mock;
 
 	private LocationManager locationManager;
 	private HealthGraphApi APIWORKER;
@@ -105,17 +105,15 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// Getting LocationManager object from System Service
 			// LOCATION_SERVICE. Need to mess with parameters to not record
 			// quite as many points.
-
-			locationManager.requestLocationUpdates(
-					LocationManager.GPS_PROVIDER, 3000, 3, this);
-			locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
-
+			
+			//locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
 			// Push Locations
-			//try {
-				//new PushLocations().execute(1);
-			//} catch (Exception e) {
-				//e.printStackTrace();
-			//}
+			try {
+				new PushLocations().execute(1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			Toast.makeText(getSherlockActivity(), "Begining Workout",
 					Toast.LENGTH_SHORT).show();
@@ -166,8 +164,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// Posts the workout for the coordinates gathered between start and
 			// stop
 			//
-			APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,
-					currentWorkoutInfoRK);
+			APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,currentWorkoutInfoRK);
 			MySQLConnector MYSQLCOMM = new MySQLConnector();
 			MYSQLCOMM.UpdateMiles();
 			//TODO: Add Check to see if any distance was done inside WNC if so, submit to database.
@@ -186,6 +183,12 @@ public class Workout extends SherlockFragment implements LocationListener {
 			WorkoutTimer.setBase(SystemClock.elapsedRealtime());
 			WorkoutTimer.start();
 			progress.dismiss();
+			
+			
+			Time t = new Time();
+			t.setToNow();
+			currentWorkoutInfoRK.SetStartTime(t);
+			currentWorkoutInfoWNC.SetStartTime(t);
 		}
 		
 		
@@ -249,7 +252,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	}
 
 	// FOR MOCK LOCATIONS
-	/*private class PushLocations extends AsyncTask<Integer, Integer, Double> {
+	private class PushLocations extends AsyncTask<Integer, Integer, Double> {
 		@Override
 		protected Double doInBackground(Integer... params) {
 			PushLocations();
@@ -261,18 +264,45 @@ public class Workout extends SherlockFragment implements LocationListener {
 					getActivity());
 			// MOCK LOCATION
 			sleep();
-			mock.pushLocation(38.817673, -89.978300);
+			mock.pushLocation(38.815899,-89.978631);
 			sleep();
-			mock.pushLocation(38.817673, -89.978250);
+			mock.pushLocation(38.815915,-89.97751);
 			sleep();
-			mock.pushLocation(38.817673, -89.978200);
+			mock.pushLocation(38.815882,-89.976335);
 			sleep();
-			mock.pushLocation(38.817673, -89.978150);
+			mock.pushLocation(38.816275,-89.975825);
 			sleep();
-			mock.pushLocation(38.817673, -89.978100);
+			mock.pushLocation(38.816726,-89.975707);
 			sleep();
-			mock.pushLocation(38.817673, -89.978050);
-
+			mock.pushLocation(38.817291,-89.975637);
+			sleep();
+			mock.pushLocation(38.817909,-89.975648);
+			sleep();
+			mock.pushLocation(38.818173,-89.976211);
+			sleep();
+			mock.pushLocation(38.818444,-89.976812);
+			sleep();
+			mock.pushLocation(38.818825,-89.977596);
+			sleep();
+			mock.pushLocation(38.819163,-89.978255);
+			sleep();
+			mock.pushLocation(38.819171,-89.97906);
+			sleep();
+			mock.pushLocation(38.818979,-89.979891);
+			sleep();
+			mock.pushLocation(38.818737,-89.980761);
+			sleep();
+			mock.pushLocation(38.818419,-89.981576);
+			sleep();
+			mock.pushLocation(38.818097,-89.98186);
+			sleep();
+			mock.pushLocation(38.817566,-89.981646);
+			sleep();
+			mock.pushLocation(38.817048,-89.981463);
+			sleep();
+			mock.pushLocation(38.816609,-89.980954);
+			sleep();
+			mock.pushLocation(38.815991,-89.979849);
 		}
 
 		public void sleep() {
@@ -283,6 +313,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 				e.printStackTrace();
 			}
 		}
-	}*/
+	}
 
 }
