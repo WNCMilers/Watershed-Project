@@ -93,6 +93,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 
 	public void onClickStart_StopTrackingBtn() {
 
+		//TODO: check if user is logged in or not first
+		//TODO: offer them login with pop-up window
 		if (Start_StopButton.getText().equals("Start Workout")) {
 			Criteria gpsCriteria = getGpsCriteria();
 			
@@ -106,6 +108,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// LOCATION_SERVICE. Need to mess with parameters to not record
 			// quite as many points.
 			
+			//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
 			//locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
 			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
 			// Push Locations
@@ -151,6 +154,9 @@ public class Workout extends SherlockFragment implements LocationListener {
 
 	public void onClickSubmitWorkout() {
 		if (APIWORKER == null)
+			Toast.makeText(getSherlockActivity(), "You must login first",
+					Toast.LENGTH_SHORT).show();
+		else if(APIWORKER.GetaccesToken() == null)
 			Toast.makeText(getSherlockActivity(), "You must login first",
 					Toast.LENGTH_SHORT).show();
 		else {
