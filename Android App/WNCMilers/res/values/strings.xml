@@ -97,4 +97,5 @@
 		<string name="feedback_details">Feedback Details</string>
 		<string name="AttachImage">Attach Image</string>
 		<string name="attach_screenshot">Attach Screenshot</string>
+		<string name="RKLaunchtxt">Launch RunKeeper</string>
 </resources>

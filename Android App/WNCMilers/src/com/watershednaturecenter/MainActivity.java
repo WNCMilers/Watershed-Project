@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -20,6 +22,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.watershednaturecenter.Dialogs.RKInstallDialog;
 
 public class MainActivity extends SherlockFragmentActivity
 {
@@ -136,10 +139,39 @@ public class MainActivity extends SherlockFragmentActivity
 	    	//setContentView(R.layout.login);
 	    	Intent i = new Intent(this, Login.class);
 	    	startActivity(i);
-        
+	    case R.id.LRK:
+	    	if (IsAppInstalled("com.fitnesskeeper.runkeeper.pro"))
+	    	{
+	    		i = new Intent(Intent.ACTION_MAIN);
+		    	PackageManager manager = getPackageManager();
+		    	i = manager.getLaunchIntentForPackage("com.fitnesskeeper.runkeeper.pro");
+		    	i.addCategory(Intent.CATEGORY_LAUNCHER);
+		    	startActivity(i);
+	    	}
+	    	else
+	    	{
+	    		RKInstallDialog RkDialog = new RKInstallDialog();
+	    		RkDialog.show(this.getFragmentManager(), "RKInstallDialogNotice");
+	    	}
+	    	
+	    	
+	    	
 	    	
 	}
 	    return true;
+	}
+	
+	private boolean IsAppInstalled(String Package)
+	{
+		 PackageManager pm = getPackageManager();
+		 boolean installed = false;
+		 try {
+		 pm.getPackageInfo(Package, PackageManager.GET_ACTIVITIES);
+		 installed = true;
+		 } catch (PackageManager.NameNotFoundException e) {
+		 installed = false;
+		 }
+		 return installed;
 	}
 	
 	public static class TabsAdapter extends FragmentPagerAdapter implements
