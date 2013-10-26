@@ -193,10 +193,9 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// stop
 			//
 			APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,currentWorkoutInfoRK);
-			MySQLConnector MYSQLCOMM = new MySQLConnector();
+			MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getFragmentManager());
 			MYSQLCOMM.UpdateMiles();
 			//TODO: Add Check to see if any distance was done inside WNC if so, submit to database.
-			
 			
 			Toast.makeText(getSherlockActivity(), "Workout Posted",
 					Toast.LENGTH_SHORT).show();
