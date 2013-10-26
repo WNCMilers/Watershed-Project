@@ -11,13 +11,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.format.Time;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +30,7 @@ import android.location.Criteria;
 import org.apache.http.client.methods.HttpPost;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.watershednaturecenter.Dialogs.LoginDialog;
 import com.watershednaturecenter.GPSItems.CoordinateInformation;
 import com.watershednaturecenter.GPSItems.HealthGraphApi;
 import com.watershednaturecenter.GPSItems.MockLocationProvider;
@@ -91,42 +95,52 @@ public class Workout extends SherlockFragment implements LocationListener {
 		return view;
 	}
 
+	
 	public void onClickStart_StopTrackingBtn() {
 
 		//TODO: check if user is logged in or not first
 		//TODO: offer them login with pop-up window
 		if (Start_StopButton.getText().equals("Start Workout")) {
-			Criteria gpsCriteria = getGpsCriteria();
-			
-			((WNC_MILERS) getActivity().getApplication())
-					.set_CurrentWorkouts(currentWorkoutInfoWNC,currentWorkoutInfoRK);
-
-			// reset Coordinate list each time
-			currentWorkoutInfoWNC.LocationArray = new ArrayList<CoordinateInformation>();
-			currentWorkoutInfoRK.LocationArray = new ArrayList<CoordinateInformation>();
-			// Getting LocationManager object from System Service
-			// LOCATION_SERVICE. Need to mess with parameters to not record
-			// quite as many points.
-			
-			//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
-			//locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
-			// Push Locations
-			try {
-				new PushLocations().execute(1);
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (!LoginStatus())
+			{
+				DisplayLoginPopup();
 			}
+			else
+			{
+				Criteria gpsCriteria = getGpsCriteria();
+				
+				((WNC_MILERS) getActivity().getApplication())
+						.set_CurrentWorkouts(currentWorkoutInfoWNC,currentWorkoutInfoRK);
 
-			Toast.makeText(getSherlockActivity(), "Begining Workout",
-					Toast.LENGTH_SHORT).show();
-			Start_StopButton.setText("Stop Workout");
-			SubmitWorkout.setEnabled(false);
+				// reset Coordinate list each time
+				currentWorkoutInfoWNC.LocationArray = new ArrayList<CoordinateInformation>();
+				currentWorkoutInfoRK.LocationArray = new ArrayList<CoordinateInformation>();
+				// Getting LocationManager object from System Service
+				// LOCATION_SERVICE. Need to mess with parameters to not record
+				// quite as many points.
+				
+				//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
+				//locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
+				// Push Locations
+				try {
+					new PushLocations().execute(1);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
-			progress = new ProgressDialog(getActivity());
-			progress.setTitle("Starting Workout");
-			progress.setMessage("Wait for GPS fix...");
-			progress.show();
+				Toast.makeText(getSherlockActivity(), "Begining Workout",
+						Toast.LENGTH_SHORT).show();
+				Start_StopButton.setText("Stop Workout");
+				SubmitWorkout.setEnabled(false);
+
+				progress = new ProgressDialog(getActivity());
+				progress.setTitle("Starting Workout");
+				progress.setMessage("Wait for GPS fix...");
+				progress.show();
+			}
+			
+			
 		} else {
 			WorkoutTimer.stop();
 			locationManager.removeUpdates(this);
@@ -136,6 +150,20 @@ public class Workout extends SherlockFragment implements LocationListener {
 			SubmitWorkout.setEnabled(true);
 		}
 
+	}
+	
+	
+	public void DisplayLoginPopup()
+	{
+		LoginDialog LD = new LoginDialog();
+		LD.show(getSherlockActivity().getFragmentManager(),"LoginDialogNotice");
+	}
+	
+	public boolean LoginStatus()
+	{
+		if (APIWORKER == null)return false;
+		else if(APIWORKER.GetaccesToken() == null)return false;
+		else return true;
 	}
 	
 	private Criteria getGpsCriteria()
@@ -153,13 +181,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	}
 
 	public void onClickSubmitWorkout() {
-		if (APIWORKER == null)
-			Toast.makeText(getSherlockActivity(), "You must login first",
-					Toast.LENGTH_SHORT).show();
-		else if(APIWORKER.GetaccesToken() == null)
-			Toast.makeText(getSherlockActivity(), "You must login first",
-					Toast.LENGTH_SHORT).show();
-		else {
+		
 			// BELOW WAS just a test to get number miles walked
 			// double miles = APIWORKER.GetWalkingDist();
 			// String milesWalkedMessage =
@@ -178,8 +200,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 			
 			Toast.makeText(getSherlockActivity(), "Workout Posted",
 					Toast.LENGTH_SHORT).show();
-		}
-
 	}
 
 	@Override

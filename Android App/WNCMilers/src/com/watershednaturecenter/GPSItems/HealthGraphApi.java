@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -55,7 +56,7 @@ public class HealthGraphApi {
     
     
     public void SetAuthorizationCode() {
-        
+    	final ProgressDialog pd = ProgressDialog.show(calledfrom, "", "Please wait...",true);
         RunKeeperWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -67,6 +68,14 @@ public class HealthGraphApi {
                 }
  
                 return super.shouldOverrideUrlLoading(view, url);
+            }
+            
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if(pd.isShowing()&&pd!=null)
+                {
+                    pd.dismiss();
+                }
             }
         });
     }
