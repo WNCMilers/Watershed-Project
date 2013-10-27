@@ -98,9 +98,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	
 	public void onClickStart_StopTrackingBtn() {
 
-		// reset Workouts Each Time
-		currentWorkoutInfoWNC.resetWorkoutInfo();
-		currentWorkoutInfoRK.resetWorkoutInfo();
+		
 		if (Start_StopButton.getText().equals("Start Workout")) {
 			if (!LoginStatus())
 			{
@@ -108,11 +106,15 @@ public class Workout extends SherlockFragment implements LocationListener {
 			}
 			else
 			{
+				// reset Workouts Each Time
+				currentWorkoutInfoWNC.resetWorkoutInfo();
+				currentWorkoutInfoRK.resetWorkoutInfo();
+				currentWorkoutInfoRK.SetWorkoutType(WorkoutType.getSelectedItem().toString());
+				//TODO need to make function for overall Workout Initialization
+				
 				Criteria gpsCriteria = getGpsCriteria();
 				
-				((WNC_MILERS) getActivity().getApplication())
-						.set_CurrentWorkouts(currentWorkoutInfoWNC,currentWorkoutInfoRK);
-
+				
 				
 				// Getting LocationManager object from System Service
 				// LOCATION_SERVICE. Need to mess with parameters to not record

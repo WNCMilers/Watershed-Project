@@ -45,9 +45,9 @@ class MySQLConnector{
 	public void UpdateMiles()
 	{
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new GetMiles().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			new UpdateMiles().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		} else {
-			new GetMiles().execute();
+			new UpdateMiles().execute();
 		}
 	}
 	
@@ -61,8 +61,8 @@ class MySQLConnector{
 	}
 	
 	
-	private static final String url_Update_WNCMileage = "http://www.##ADDRESS HERE##.com/Update_WNCMileage.php";
-	private static final String url_Get_WNCMileage = "http://www.##ADDRESS HERE##.com/Get_WNCMileage.php";
+	private static final String url_Update_WNCMileage = "http://www.##ADDRESS HERE##/Update_WNCMileage.php";
+	private static final String url_Get_WNCMileage = "http://www.##ADDRESS HERE##/Get_WNCMileage.php";
 	
 	class UpdateMiles extends AsyncTask<String,String,String>
 	{
@@ -179,7 +179,7 @@ class MySQLConnector{
 		                    Result += "\n\t" + jArray.getJSONObject(i); 
 		                    //TODO depending on the name of actuall database fields these will need to be changed!!
 		                    Mileage = Double.parseDouble(jArray.getJSONObject(i).getString("Miles"));
-	                    	if (jArray.getJSONObject(i).getString("RedemDate") == null) IsRedeemd = false;
+	                    	if (jArray.getJSONObject(i).getString("RedemDate") == "null") IsRedeemd = false;
 	                    	else IsRedeemd = true;	                    		
 		            }
 		    }catch(JSONException e){
