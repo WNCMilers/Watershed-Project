@@ -110,6 +110,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 				currentWorkoutInfoWNC.resetWorkoutInfo();
 				currentWorkoutInfoRK.resetWorkoutInfo();
 				currentWorkoutInfoRK.SetWorkoutType(WorkoutType.getSelectedItem().toString());
+				currentWorkoutInfoRK.SetEquipmentUsed("None");
 				//TODO need to make function for overall Workout Initialization
 				
 				Criteria gpsCriteria = getGpsCriteria();

@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.text.format.Time;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -29,7 +30,6 @@ import android.webkit.WebViewClient;
 
 import com.watershednaturecenter.MainActivity;
 import com.watershednaturecenter.WNC_MILERS;
-//extra imports
 
 
 
@@ -196,12 +196,21 @@ public class HealthGraphApi {
     	j.put("path", BuildPathParm(LocationArray));
     	StringEntity se = new StringEntity( j.toString());
         post.setEntity(se);
-        
-        try {
-        	new ActivityPostTask().execute(post);
-        } catch (Exception e) {
-            e.printStackTrace();
+        	
+        try{
+        	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    			new ActivityPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,post);
+    		} else {
+    			new ActivityPostTask().execute(post);
+    		}
+        	
         }
+        catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+		
+        	
     	}
     	catch(Exception e)
     	{
@@ -390,7 +399,8 @@ public class HealthGraphApi {
     		HttpClient client = new DefaultHttpClient();
     		try {
                 HttpResponse response = client.execute(valueIWantToSend);
-                
+                if (response != null);
+                	String Test = "1";
     		} catch (Exception e) {
     			// TODO Auto-generated catch block
     		}
