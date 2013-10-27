@@ -98,8 +98,9 @@ public class Workout extends SherlockFragment implements LocationListener {
 	
 	public void onClickStart_StopTrackingBtn() {
 
-		//TODO: check if user is logged in or not first
-		//TODO: offer them login with pop-up window
+		// reset Workouts Each Time
+		currentWorkoutInfoWNC.resetWorkoutInfo();
+		currentWorkoutInfoRK.resetWorkoutInfo();
 		if (Start_StopButton.getText().equals("Start Workout")) {
 			if (!LoginStatus())
 			{
@@ -112,9 +113,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 				((WNC_MILERS) getActivity().getApplication())
 						.set_CurrentWorkouts(currentWorkoutInfoWNC,currentWorkoutInfoRK);
 
-				// reset Coordinate list each time
-				currentWorkoutInfoWNC.LocationArray = new ArrayList<CoordinateInformation>();
-				currentWorkoutInfoRK.LocationArray = new ArrayList<CoordinateInformation>();
+				
 				// Getting LocationManager object from System Service
 				// LOCATION_SERVICE. Need to mess with parameters to not record
 				// quite as many points.
@@ -196,10 +195,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 			MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getFragmentManager());
 			MYSQLCOMM.UpdateMiles();
 			//TODO: Add Check to see if any distance was done inside WNC if so, submit to database.
-			
-			Toast.makeText(getSherlockActivity(), "Workout Posted",
-					Toast.LENGTH_SHORT).show();
-	}
+			SubmitWorkout.setEnabled(false);
+	};
 
 	@Override
 	public void onLocationChanged(Location location) {

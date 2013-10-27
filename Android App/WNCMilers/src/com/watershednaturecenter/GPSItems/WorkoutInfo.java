@@ -114,4 +114,15 @@ public class WorkoutInfo {
 		
 	}
 	
+	public void resetWorkoutInfo()
+	{
+		WorkoutType = "";
+		EquipmentUsed = "";
+		StartTime = null;
+		WorkoutNotes = "";
+		CurDistTraveled = 0;
+		CurPace = 0;
+		LocationArray = new ArrayList<CoordinateInformation>();
+	}
+	
 }
