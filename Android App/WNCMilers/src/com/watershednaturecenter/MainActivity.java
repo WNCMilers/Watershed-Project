@@ -139,14 +139,15 @@ public class MainActivity extends SherlockFragmentActivity
 	    	//setContentView(R.layout.login);
 	    	Intent i = new Intent(this, Login.class);
 	    	startActivity(i);
+	    	break;
 	    case R.id.LRK:
 	    	if (IsAppInstalled("com.fitnesskeeper.runkeeper.pro"))
 	    	{
-	    		i = new Intent(Intent.ACTION_MAIN);
+	    		Intent RK = new Intent(Intent.ACTION_MAIN);
 		    	PackageManager manager = getPackageManager();
-		    	i = manager.getLaunchIntentForPackage("com.fitnesskeeper.runkeeper.pro");
-		    	i.addCategory(Intent.CATEGORY_LAUNCHER);
-		    	startActivity(i);
+		    	RK = manager.getLaunchIntentForPackage("com.fitnesskeeper.runkeeper.pro");
+		    	RK.addCategory(Intent.CATEGORY_LAUNCHER);
+		    	startActivity(RK);
 	    	}
 	    	else
 	    	{
