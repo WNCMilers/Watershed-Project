@@ -61,8 +61,8 @@ class MySQLConnector{
 	}
 	
 	
-	private static final String url_Update_WNCMileage = "http://www.##ADDRESS HERE##/Update_WNCMileage.php";
-	private static final String url_Get_WNCMileage = "http://www.##ADDRESS HERE##/Get_WNCMileage.php";
+	private static final String url_Update_WNCMileage = "http://www.watershednaturecenter.com/Update_WNCMileage.php";
+	private static final String url_Get_WNCMileage = "http://www.watershednaturecenter.com/Get_WNCMileage.php";
 	
 	class UpdateMiles extends AsyncTask<String,String,String>
 	{
@@ -178,8 +178,8 @@ class MySQLConnector{
 		                    //Get an output to the screen
 		                    Result += "\n\t" + jArray.getJSONObject(i); 
 		                    //TODO depending on the name of actuall database fields these will need to be changed!!
-		                    Mileage = Double.parseDouble(jArray.getJSONObject(i).getString("Miles"));
-	                    	if (jArray.getJSONObject(i).getString("RedemDate") == "null") IsRedeemd = false;
+		                    Mileage = Double.parseDouble(jArray.getJSONObject(i).getString("Distance"));
+	                    	if (jArray.getJSONObject(i).getString("Redemption_Date") == "null") IsRedeemd = false;
 	                    	else IsRedeemd = true;	                    		
 		            }
 		    }catch(JSONException e){
