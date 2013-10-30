@@ -24,7 +24,8 @@ public class Membership_Signup extends SherlockFragment
     private static final String ZIP_REGEX = "\\d{5}";
     private static final String CITY_REGEX = "^(?:[a-zA-Z]+(?:[.'\\-,])?\\s?)+$";
     
-	private String firstName, lastName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
+    private MembershipInfo member = new MembershipInfo();
+	//private String firstName, lastName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
 	private Button submitButton;
 	private EditText firstNameField, lastNameField, addressLine1Field, addressLine2Field, cityField, zipCodeField, phoneNumberField, emailAddressField;
 	private Spinner stateSpinner, membershipLevelSpinner;
@@ -57,6 +58,8 @@ public class Membership_Signup extends SherlockFragment
             		
               	Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
             	getDataFromForm();
+            	MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getFragmentManager());
+            	MYSQLCOMM.RegisterMember(member);
         	}
         });
 		return view;
@@ -64,83 +67,83 @@ public class Membership_Signup extends SherlockFragment
 	
 	//Function to load data from the textFields/Spinners into local variables
 	public void getDataFromForm(){
-		firstName = firstNameField.getText().toString().trim();
-		lastName = lastNameField.getText().toString().trim();
-		addressLine1 = addressLine1Field.getText().toString().trim();
-		addressLine2 = addressLine2Field.getText().toString().trim();
-		city = cityField.getText().toString().trim();
-		state = stateSpinner.getSelectedItem().toString();
-		zipCode = zipCodeField.getText().toString().trim();
-		phoneNumber = phoneNumberField.getText().toString().trim();
-		emailAddress = emailAddressField.getText().toString().trim();
-		membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
+		member.firstName = firstNameField.getText().toString().trim();
+		member.lastName = lastNameField.getText().toString().trim();
+		member.addressLine1 = addressLine1Field.getText().toString().trim();
+		member.addressLine2 = addressLine2Field.getText().toString().trim();
+		member.city = cityField.getText().toString().trim();
+		member.state = stateSpinner.getSelectedItem().toString();
+		member.zipCode = zipCodeField.getText().toString().trim();
+		member.phoneNumber = phoneNumberField.getText().toString().trim();
+		member.emailAddress = emailAddressField.getText().toString().trim();
+		member.membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
 		
 		if (!completeFormValidityCheck()){
-			Toast.makeText(getSherlockActivity(), "Thanks " + firstName + " " + lastName, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getSherlockActivity(), "Thanks " + member.firstName + " " + member.lastName, Toast.LENGTH_SHORT).show();
 		}
 	}
 	
 	public boolean completeFormValidityCheck(){
 		boolean errorPresent = false;
 		
-		if (firstName.isEmpty()){
+		if (member.firstName.isEmpty()){
 			firstNameField.setError(null);
 			firstNameField.setError("First name cannot be blank");
 			errorPresent = true;
 		}
-		if (lastName.isEmpty()){
+		if (member.lastName.isEmpty()){
 			lastNameField.setError(null);
 			lastNameField.setError("Last name cannot be blank");
 			errorPresent = true;
 		}
 		
-		if (addressLine1.isEmpty()){
+		if (member.addressLine1.isEmpty()){
 			addressLine1Field.setError(null);
 			addressLine1Field.setError("Address Line 1 cannot be blank");
 			errorPresent = true;
 		}
 		
-		if (city.isEmpty()){
+		if (member.city.isEmpty()){
 			cityField.setError(null);
 			cityField.setError("City cannot be blank");
 			errorPresent = true;
 		}
 		else {
-			if(!checkValidity(CITY_REGEX, city)){
+			if(!checkValidity(CITY_REGEX, member.city)){
 				cityField.setError(null);
 				cityField.setError("Improper City Name Format");
 			}
 		}
 		
-		if (zipCode.isEmpty()){
+		if (member.zipCode.isEmpty()){
 			zipCodeField.setError(null);
 			zipCodeField.setError("Zip code cannot be blank");
 			errorPresent = true;
 		} else {
-			if(!checkValidity(ZIP_REGEX, zipCode)){
+			if(!checkValidity(ZIP_REGEX, member.zipCode)){
 				zipCodeField.setError(null);
 				zipCodeField.setError("Improper format. Ex: 62025");
 			}
 		}
 		
-		if (phoneNumber.isEmpty()){
+		if (member.phoneNumber.isEmpty()){
 			phoneNumberField.setError(null);
 			phoneNumberField.setError("Phone Number cannot be blank");
 			errorPresent = true;
 		}
 		else {
-			if(!checkValidity(PHONE_REGEX, phoneNumber)){
+			if(!checkValidity(PHONE_REGEX, member.phoneNumber)){
 				phoneNumberField.setError(null);
 				phoneNumberField.setError("Improper format. Ex: 555-555-5555");
 			}
 		}
 		
-		if (emailAddress.isEmpty()){
+		if (member.emailAddress.isEmpty()){
 			emailAddressField.setError(null);
 			emailAddressField.setError("Email Address cannot be blank");
 			errorPresent = true;
 		} else {
-			if(!checkValidity(EMAIL_REGEX, emailAddress)){
+			if(!checkValidity(EMAIL_REGEX, member.emailAddress)){
 				emailAddressField.setError(null);
 				emailAddressField.setError("Improper format. Ex: john@domain.com");
 			}

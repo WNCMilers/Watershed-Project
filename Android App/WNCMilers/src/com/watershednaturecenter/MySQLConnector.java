@@ -25,6 +25,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.watershednaturecenter.Dialogs.LoginDialog;
@@ -60,9 +62,19 @@ class MySQLConnector{
 		}
 	}
 	
+	public void RegisterMember(MembershipInfo member)
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			new RegisterMember().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, member);
+		} else {
+			new RegisterMember().execute(member);
+		}
+	}
+	
 	
 	private static final String url_Update_WNCMileage = "http://www.watershednaturecenter.com/Update_WNCMileage.php";
 	private static final String url_Get_WNCMileage = "http://www.watershednaturecenter.com/Get_WNCMileage.php";
+	private static final String url_Register_Member = "http://www.watershednaturecenter.com/Register_Member.php";
 	
 	class UpdateMiles extends AsyncTask<String,String,String>
 	{
@@ -186,5 +198,54 @@ class MySQLConnector{
 		            Log.e("log_tag", "Error parsing data "+e.toString());
 		    }
 		}    
+	}
+	
+	class RegisterMember extends AsyncTask<MembershipInfo,String,String>
+	{
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			//TODO dialog boxes here
+		};
+		
+		@Override
+		protected String doInBackground(MembershipInfo... arg0) {
+			try
+			{
+ 				//Integer RKlogin = currentWorkout.getRK_ID();
+				
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				//params.add(new BasicNameValuePair("RKID", RKlogin.toString()));
+				//TODO: Change these to proper user info stuff
+				params.add(new BasicNameValuePair("FirstName", arg0[0].firstName));
+				params.add(new BasicNameValuePair("LastName", arg0[0].lastName));
+				params.add(new BasicNameValuePair("AddressLine1", arg0[0].addressLine1));
+				params.add(new BasicNameValuePair("AddressLine2", arg0[0].addressLine2));
+				params.add(new BasicNameValuePair("City", arg0[0].city));
+				params.add(new BasicNameValuePair("State", arg0[0].state));
+				params.add(new BasicNameValuePair("Zip", arg0[0].zipCode));
+				params.add(new BasicNameValuePair("Phone", arg0[0].phoneNumber));
+				params.add(new BasicNameValuePair("EmailAddress", arg0[0].emailAddress));
+				//params.add(new BasicNameValuePair("membershiplevel", arg0[0].membershipLevel));
+				//params.add(new BasicNameValuePair("birthdate", ));
+				//params.add(new BasicNameValuePair("end", ));
+				
+								
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost(url_Register_Member);
+                httpPost.setEntity(new UrlEncodedFormEntity(params));
+ 
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                InputStream is = httpEntity.getContent();
+			}
+			catch(Exception e)
+			{
+				Toast.makeText(context,e.toString() ,Toast.LENGTH_LONG).show();
+			}
+			
+			return null;
+		}
+		
 	}
 }
