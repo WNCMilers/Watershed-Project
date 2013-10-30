@@ -57,12 +57,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private WorkoutInfo currentWorkoutInfoWNC;
 	private WorkoutInfo currentWorkoutInfoRK;
 	private Polygon WNCboundaries;
-
-	@Override
-	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
-		getActivity().setContentView(R.layout.workout);
-		initializelayout();
-	};
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -352,6 +346,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	
 	private void initializelayout()
 	{
+		
 		Start_StopButton.getBackground().setColorFilter(Color.parseColor("#CCFF66"), PorterDuff.Mode.MULTIPLY);
 		SubmitWorkout.getBackground().setColorFilter(Color.parseColor("#E65050"), PorterDuff.Mode.MULTIPLY);
 	}
