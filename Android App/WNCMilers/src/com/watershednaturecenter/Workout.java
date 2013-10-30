@@ -2,6 +2,8 @@ package com.watershednaturecenter;
 
 import java.util.ArrayList;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Location;
@@ -57,6 +59,12 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private Polygon WNCboundaries;
 
 	@Override
+	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+		getActivity().setContentView(R.layout.workout);
+		initializelayout();
+	};
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		currentWorkoutInfoWNC = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutWNC();
@@ -75,6 +83,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		WorkoutTimer = (Chronometer) view.findViewById(R.id.WorkoutTimer);
 		WorkoutType = (Spinner) view.findViewById(R.id.WorkoutType);
 
+		
 		Start_StopButton = (Button) view.findViewById(R.id.Start_StopWorkout);
 		Start_StopButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -92,6 +101,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		locationManager = (LocationManager) getSherlockActivity()
 				.getSystemService(Context.LOCATION_SERVICE);
 
+		initializelayout();
 		return view;
 	}
 
@@ -339,5 +349,12 @@ public class Workout extends SherlockFragment implements LocationListener {
 			}
 		}
 	}
+	
+	private void initializelayout()
+	{
+		Start_StopButton.getBackground().setColorFilter(Color.parseColor("#CCFF66"), PorterDuff.Mode.MULTIPLY);
+		SubmitWorkout.getBackground().setColorFilter(Color.parseColor("#E65050"), PorterDuff.Mode.MULTIPLY);
+	}
+	
 
 }

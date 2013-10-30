@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:orientation="horizontal" >
+    
+    <LinearLayout
+        android:layout_height="fill_parent"
+        android:layout_width="0dp"
+        android:layout_weight=".6"
+        android:orientation="vertical">
+  <Chronometer
+        android:id="@+id/WorkoutTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Chronometer"
+        android:textSize="40dp" />
+
+  <Spinner
+      android:id="@+id/WorkoutType"
+      android:layout_width="87dp"
+      android:layout_height="wrap_content"
+      android:entries="@array/workoutType_array"
+      android:gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/lblWorkoutType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Select Workout Type:" />
+
+    <TextView
+        android:id="@+id/lblPace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="46dp"
+        android:text="Current Pace" />
+
+    <TextView
+        android:id="@+id/lblDist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblPace"
+        android:layout_alignBottom="@+id/lblPace"
+        android:layout_alignParentRight="true"
+        android:text="Distance Traveled" />
+    </LinearLayout>
+  
+
+    <LinearLayout
+        android:layout_height="fill_parent"
+        android:layout_width="0dp"
+        android:layout_weight=".4"
+        android:orientation="vertical">
+        
+        <Button
+        android:id="@+id/Start_StopWorkout"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"
+        android:layout_marginTop="5dp"
+        android:text="Start Workout"
+        android:textSize="60dp" />
+        
+        <Button
+        android:id="@+id/SubmitWorkout"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"
+        android:layout_marginBottom="5dp"
+        android:state_enabled="false"
+        android:text="Submit Workout"
+        android:textSize="60dp" />
+    </LinearLayout>
+    
+</LinearLayout>
