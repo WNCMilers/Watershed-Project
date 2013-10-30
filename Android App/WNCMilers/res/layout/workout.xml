@@ -13,6 +13,12 @@
         android:state_enabled="false"
         android:text="Submit Workout"
         android:textSize="30dp" />
+    
+     <!--<fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.google.android.gms.maps.SupportMapFragment" />-->
 
     <Chronometer
         android:id="@+id/WorkoutTimer"

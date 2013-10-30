@@ -32,6 +32,11 @@ import android.location.Criteria;
 import org.apache.http.client.methods.HttpPost;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.watershednaturecenter.Dialogs.LoginDialog;
 import com.watershednaturecenter.GPSItems.CoordinateInformation;
 import com.watershednaturecenter.GPSItems.HealthGraphApi;
@@ -47,6 +52,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private ProgressDialog progress;
 	private TextView lblDist;
 	private TextView lblPace;
+	private PolylineOptions line = new PolylineOptions();
 	
 
 	// FOR pushing MOCK LOCATIOn
@@ -57,6 +63,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private WorkoutInfo currentWorkoutInfoWNC;
 	private WorkoutInfo currentWorkoutInfoRK;
 	private Polygon WNCboundaries;
+	private GoogleMap map;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +74,12 @@ public class Workout extends SherlockFragment implements LocationListener {
 		View view = inflater.inflate(R.layout.workout, container, false);
 		lblDist = (TextView) view.findViewById(R.id.lblDist);
 		lblPace = (TextView) view.findViewById(R.id.lblPace);
+		
+		SupportMapFragment fm = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
+		
+		map = fm.getMap();
+		map.setMyLocationEnabled(true);
+		
 		
 		// runKeeperwebView = (WebView) view.findViewById(R.id.webView);
 		APIWORKER = ((WNC_MILERS) getActivity().getApplication())
@@ -95,6 +108,14 @@ public class Workout extends SherlockFragment implements LocationListener {
 		locationManager = (LocationManager) getSherlockActivity()
 				.getSystemService(Context.LOCATION_SERVICE);
 
+		Location lastknownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		LatLng lastLoc = new LatLng(lastknownLocation.getLatitude(),lastknownLocation.getLongitude());
+				// Showing the current location in Google Map
+		        map.moveCamera(CameraUpdateFactory.newLatLng(lastLoc));
+
+		        // Zoom in the Google Map
+		        map.animateCamera(CameraUpdateFactory.zoomTo(17));
+		
 		initializelayout();
 		return view;
 	}
@@ -220,12 +241,25 @@ public class Workout extends SherlockFragment implements LocationListener {
 			currentWorkoutInfoWNC.SetStartTime(t);
 		}
 		
-		
+		// Creating a LatLng object for the current location
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        
+        
+        
+     // Showing the current location in Google Map
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Zoom in the Google Map
+        map.animateCamera(CameraUpdateFactory.zoomTo(17));
 		CoordinateInformation CurrentLocation = new CoordinateInformation();
-		CurrentLocation.SetLatitude(location.getLatitude());
-		CurrentLocation.SetLongitude(location.getLongitude());
+		CurrentLocation.SetLatitude(latLng.latitude);
+		CurrentLocation.SetLongitude(latLng.longitude);
 		CurrentLocation.SetAltitude(location.getAltitude());
 		CurrentLocation.SetCurrentDateTime();
+		
+		
+
+        
 		
 		//Check to see if user is in WNC
 		if (WNCboundaries.contains(CurrentLocation.GetLatitude(), CurrentLocation.GetLongitude()))
@@ -241,6 +275,13 @@ public class Workout extends SherlockFragment implements LocationListener {
 			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
 			currentWorkoutInfoRK.UpdateDistTraveled();
 		}
+		
+		LatLng PreviousLocation = new LatLng(currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLatitude(),currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLongitude());
+        
+        line.width(5);
+        line.color(Color.RED);
+        line.add(PreviousLocation,latLng);
+        map.addPolyline(line);
 
 		//String message =
 		//String.format("New Location \n Longitude: %1$s \n Latitude: %2$s",
