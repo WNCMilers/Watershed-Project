@@ -17,7 +17,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
-	        android:layout_below="@+id/firstName"
+	        android:layout_below="@+id/nameLayout"
 	        android:ems="10"
 	        android:hint="@string/person_address"
 	        android:inputType="textPostalAddress" />
@@ -53,18 +53,33 @@
 	        android:ems="10"
 	        android:hint="@string/zip_code"
 	        android:inputType="number" />
-
-	    <EditText
+	    
+<LinearLayout
+    android:id="@+id/nameLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    
+        <EditText
 	        android:id="@+id/firstName"
-	        android:layout_width="160dp"
+	        android:layout_width="0dp"
+	        android:layout_weight=".5"
 	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentTop="true"
 	        android:inputType="textCapWords"
 	        android:ems="10"
 	        android:hint="@string/first_Name" >
 	        <requestFocus />
 	    </EditText>
+	    
+         <EditText
+	        android:id="@+id/lastName"
+	        android:layout_width="0dp"
+	        android:layout_weight=".5"
+	        android:layout_height="wrap_content"
+	        android:ems="10"
+	        android:inputType="textCapWords"
+	        android:hint="@string/last_Name" />
+</LinearLayout>
 
 	    <Spinner
 	        android:id="@+id/StateSelection"
@@ -75,17 +90,8 @@
 	        android:entries="@array/states_array"
 	        android:prompt="@string/state"
 	        android:spinnerMode="dialog" />
-
-	    <EditText
-	        android:id="@+id/lastName"
-	        android:layout_width="160dp"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentRight="true"
-	        android:layout_alignParentTop="true"
-	        android:ems="10"
-	        android:inputType="textCapWords"
-	        android:hint="@string/last_Name" />
-
+	   
+	    
 	    <EditText
 	        android:id="@+id/PhoneNumber"
 	        android:layout_width="match_parent"
