@@ -52,7 +52,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private ProgressDialog progress;
 	private TextView lblDist;
 	private TextView lblPace;
-	private PolylineOptions line = new PolylineOptions();
+	private PolylineOptions line;
 	
 
 	// FOR pushing MOCK LOCATIOn
@@ -64,6 +64,14 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private WorkoutInfo currentWorkoutInfoRK;
 	private Polygon WNCboundaries;
 	private GoogleMap map;
+	
+	@Override
+	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+		if (getResources().getConfiguration().orientation == newConfig.ORIENTATION_PORTRAIT)
+			map.animateCamera(CameraUpdateFactory.zoomTo(16));
+		else
+			map.animateCamera(CameraUpdateFactory.zoomTo(17));
+	};
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,12 +117,23 @@ public class Workout extends SherlockFragment implements LocationListener {
 				.getSystemService(Context.LOCATION_SERVICE);
 
 		Location lastknownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		LatLng lastLoc = new LatLng(lastknownLocation.getLatitude(),lastknownLocation.getLongitude());
-				// Showing the current location in Google Map
-		        map.moveCamera(CameraUpdateFactory.newLatLng(lastLoc));
+		try{
+			LatLng lastLoc = new LatLng(lastknownLocation.getLatitude(),lastknownLocation.getLongitude());
+			// Showing the current location in Google Map
+	        map.moveCamera(CameraUpdateFactory.newLatLng(lastLoc));
 
-		        // Zoom in the Google Map
-		        map.animateCamera(CameraUpdateFactory.zoomTo(17));
+	        // Zoom in the Google Map
+	        map.animateCamera(CameraUpdateFactory.zoomTo(17));
+	        
+		}
+		catch(Exception e)
+		{
+			map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(38.817480, -89.978670)));
+			// Zoom in the Google Map
+	        map.animateCamera(CameraUpdateFactory.zoomTo(17));
+		}
+		
+				
 		
 		initializelayout();
 		return view;
@@ -134,6 +153,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 				// reset Workouts Each Time
 				currentWorkoutInfoWNC.resetWorkoutInfo();
 				currentWorkoutInfoRK.resetWorkoutInfo();
+				line = new PolylineOptions();
 				currentWorkoutInfoRK.SetWorkoutType(WorkoutType.getSelectedItem().toString());
 				currentWorkoutInfoRK.SetEquipmentUsed("None");
 				//TODO need to make function for overall Workout Initialization
@@ -278,10 +298,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		
 		LatLng PreviousLocation = new LatLng(currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLatitude(),currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLongitude());
         
-        line.width(5);
-        line.color(Color.RED);
-        line.add(PreviousLocation,latLng);
-        map.addPolyline(line);
+        
 
 		//String message =
 		//String.format("New Location \n Longitude: %1$s \n Latitude: %2$s",
@@ -301,6 +318,25 @@ public class Workout extends SherlockFragment implements LocationListener {
 		lblPace.setText(Integer.toString(hours)+ ":"+Integer.toString(minutes)+ ":"+Integer.toString(seconds));
 		//Toast.makeText(getSherlockActivity(), message, Toast.LENGTH_SHORT)
 				//.show();
+		
+		Drawline(PreviousLocation, latLng, pace);
+		
+	}
+	
+	private void Drawline(LatLng PreviousLocation, LatLng CurLoc, long pace)
+	{
+		line.width(5);
+		if (pace > 360000)line.color(Color.parseColor("#FF0000 "));
+		else if(pace > 42000)line.color(Color.parseColor("#FF5500"));
+		else if(pace > 48000)line.color(Color.parseColor("#FFBB00"));
+		else if(pace > 54000)line.color(Color.parseColor("#FFFF00"));
+		else if(pace > 60000)line.color(Color.parseColor("#BBFF00"));
+		else if(pace > 66000)line.color(Color.parseColor("#55FF00"));
+		else if(pace > 72000)line.color(Color.parseColor("#00FF00"));
+			
+        
+        line.add(PreviousLocation,CurLoc);
+        map.addPolyline(line);
 	}
 
 	@Override
