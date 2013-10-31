@@ -12,6 +12,8 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.format.Time;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -442,6 +444,14 @@ public class Workout extends SherlockFragment implements LocationListener {
 		SubmitWorkout.getBackground().setColorFilter(Color.parseColor("#E65050"), PorterDuff.Mode.MULTIPLY);
 		TotalMilesProgressBar.setProgress((int)currentWorkoutInfoWNC.TotalWNCMilesForUser);
 	}
+	
+	public void onDestroyView() {
+        super.onDestroyView(); 
+        Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));  
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.remove(fragment);
+        ft.commit();
+}
 	
 
 }
