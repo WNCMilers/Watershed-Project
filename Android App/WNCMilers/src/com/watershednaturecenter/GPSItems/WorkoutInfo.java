@@ -12,6 +12,7 @@ public class WorkoutInfo {
 	 private double CurDistTraveled;
 	 private double CurPace;
 	 private Integer RK_ID;
+	 public double TotalWNCMilesForUser = 0.0;
 	 
 	 public ArrayList<CoordinateInformation> LocationArray = new ArrayList<CoordinateInformation>();
 	    
@@ -95,7 +96,7 @@ public class WorkoutInfo {
 		return RK_ID;
 	}
 	
-	public void UpdateDistTraveled()
+	public double UpdateDistTraveled()
 	{
 		if (LocationArray.size() > 1)
 		{
@@ -111,6 +112,7 @@ public class WorkoutInfo {
 	    CurDistTraveled = CurDistTraveled += (3955.64142 *(2 * Math.asin(Math.sqrt(a))));
 	    //CurDistTraveled = CurDistTraveled += (6366000 *(2 * Math.asin(Math.sqrt(a))));
 		}
+		return CurDistTraveled;
 		
 	}
 	

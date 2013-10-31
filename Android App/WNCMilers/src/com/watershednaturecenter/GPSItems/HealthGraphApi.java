@@ -30,6 +30,9 @@ import android.webkit.WebViewClient;
 
 import com.watershednaturecenter.MainActivity;
 import com.watershednaturecenter.WNC_MILERS;
+import com.watershednaturecenter.MySQLConnector;
+import com.watershednaturecenter.httpCalls;
+
 
 
 
@@ -369,7 +372,8 @@ public class HealthGraphApi {
                 String jsonString = EntityUtils.toString(response.getEntity());
                 //JSONArray jsonArray = new JSONArray(jsonString);
                 currentWorkout.SetRK_ID(Integer.parseInt(jsonString.substring(jsonString.indexOf("userID")+8, jsonString.indexOf("userID")+16)));
-     
+                httpCalls GetMilesHTTPCall = new httpCalls();
+    			GetMilesHTTPCall.GetCompletedMileage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -377,7 +381,7 @@ public class HealthGraphApi {
     	
     	@Override
     	protected void onPostExecute(Double result) {
-    		// TODO Auto-generated method stub
+    		// TODO Auto-generated method stub    		
     		calledfrom.startActivity(new Intent(calledfrom, MainActivity.class));
     		this.cancel(true);
     	}

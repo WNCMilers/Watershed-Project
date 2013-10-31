@@ -33,8 +33,7 @@ import com.watershednaturecenter.Dialogs.LoginDialog;
 import com.watershednaturecenter.Dialogs.WNCMileageDialog;
 import com.watershednaturecenter.GPSItems.WorkoutInfo;
 
-class MySQLConnector{
-	String Result = null;
+public class MySQLConnector{
 	Context context = WNC_MILERS.getInstance();
 	FragmentManager FM;
 	WorkoutInfo currentWorkout = ((WNC_MILERS) context).get_CurrentWorkoutWNC();
@@ -43,6 +42,8 @@ class MySQLConnector{
 	{
 		FM = fm;
 	}
+	
+	public MySQLConnector(){}
 	
 	public void UpdateMiles()
 	{
@@ -127,18 +128,9 @@ class MySQLConnector{
 		protected String doInBackground(String... arg0) {
 			try
 			{
-				Integer RKlogin = currentWorkout.getRK_ID();
-				
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("RKID", RKlogin.toString()));
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(url_Get_WNCMileage);
-                httpPost.setEntity(new UrlEncodedFormEntity(params));
- 
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                HttpEntity httpEntity = httpResponse.getEntity();
-                InputStream is = httpEntity.getContent();
-                ConvertToString(is);
+				httpCalls GetMilesHTTPCall = new httpCalls();
+				IsRedeemd = GetMilesHTTPCall.GetCompletedMileage_IsReedemd().isRedeemed;
+				Mileage = GetMilesHTTPCall.GetCompletedMileage_IsReedemd().mileage;
 			}
 			catch(Exception e)
 			{
@@ -151,7 +143,7 @@ class MySQLConnector{
 		protected void onPostExecute(String result) 
 		{
 			
-			if (Result != null)
+			if (IsRedeemd != null)
 			{
 				WNCMileageDialog MileageDialog = new WNCMileageDialog(Mileage,IsRedeemd);
 				//TODO show Current number miles Dialog
@@ -163,6 +155,7 @@ class MySQLConnector{
 		
 		private void ConvertToString(InputStream is)
 		{
+			String Result = null;
 			String tempResult = null;
 			//convert response to string
 		    try{

@@ -17,21 +17,32 @@
             <RelativeLayout 
                 android:layout_width="fill_parent"
         		android:layout_height="0dp"
-        		android:layout_weight=".1">
+        		android:layout_weight=".1">              	
+                	
+                	
+
+                	<ProgressBar
+                	    android:id="@+id/progressBarMilesCompleted"
+                	    style="?android:attr/progressBarStyleHorizontal"
+                	    android:layout_width="fill_parent"
+                	    android:layout_height="wrap_content"
+                	    android:layout_centerHorizontal="true"
+            			android:layout_centerVertical="true"
+            			android:gravity="center_vertical|center_horizontal"
+            			android:layout_marginLeft="75dp"
+            			android:layout_marginRight="75dp"
+            			android:progressDrawable="@drawable/customprogressbar" />
+                	
                 	<TextView
-            		android:id="@+id/lblWorkoutType"
+            		android:id="@+id/lblMilesCompleted"
             		android:layout_width="wrap_content"
            		 	android:layout_height="wrap_content"
-            		android:layout_alignParentLeft="true"
-            		android:layout_alignParentTop="true"
-            		android:text="Select Workout Type:" />
-                	
-                	<Spinner
-            		android:id="@+id/WorkoutType"
-           			android:layout_width="87dp"
-            		android:layout_height="wrap_content"
-            		android:entries="@array/workoutType_array"
-            		android:gravity="center_horizontal" />
+           		 	android:layout_centerHorizontal="true"
+           			android:gravity="center_horizontal"
+           			android:text="0.00 mi out of 25.00 mi completed"
+           			android:layout_below="@+id/progressBarMilesCompleted"/>
+            		
+
             </RelativeLayout>
             
             
@@ -51,6 +62,7 @@
             		android:layout_width="wrap_content"
             		android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:gravity="center_vertical|center_horizontal"
             android:text="Chronometer"
             android:textSize="60dp" />

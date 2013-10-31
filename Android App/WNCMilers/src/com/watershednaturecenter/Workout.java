@@ -23,6 +23,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.watershednaturecenter.Dialogs.LoginDialog;
+import com.watershednaturecenter.Dialogs.SubmitWorkoutDialog;
 import com.watershednaturecenter.GPSItems.CoordinateInformation;
 import com.watershednaturecenter.GPSItems.HealthGraphApi;
 import com.watershednaturecenter.GPSItems.MockLocationProvider;
@@ -48,10 +50,11 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private Button Start_StopButton;
 	private Button SubmitWorkout;
 	private Chronometer WorkoutTimer;
-	private Spinner WorkoutType;
 	private ProgressDialog progress;
 	private TextView lblDist;
 	private TextView lblPace;
+	private TextView lblTotalWNCMiles;
+	private ProgressBar TotalMilesProgressBar;
 	private PolylineOptions line;
 	
 
@@ -79,9 +82,16 @@ public class Workout extends SherlockFragment implements LocationListener {
 		currentWorkoutInfoWNC = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutWNC();
 		currentWorkoutInfoRK = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutRK(); 
 		
+		
+		
 		View view = inflater.inflate(R.layout.workout, container, false);
 		lblDist = (TextView) view.findViewById(R.id.lblDist);
 		lblPace = (TextView) view.findViewById(R.id.lblPace);
+		lblTotalWNCMiles = (TextView) view.findViewById(R.id.lblMilesCompleted);
+		lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser));
+		TotalMilesProgressBar = (ProgressBar)view.findViewById(R.id.progressBarMilesCompleted);
+		TotalMilesProgressBar.setMax(25000);
+		TotalMilesProgressBar.setProgress((int)(currentWorkoutInfoWNC.TotalWNCMilesForUser*1000));
 		
 		SupportMapFragment fm = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
 		
@@ -96,7 +106,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 				.get_WNCboundaries();
 
 		WorkoutTimer = (Chronometer) view.findViewById(R.id.WorkoutTimer);
-		WorkoutType = (Spinner) view.findViewById(R.id.WorkoutType);
 
 		
 		Start_StopButton = (Button) view.findViewById(R.id.Start_StopWorkout);
@@ -153,9 +162,9 @@ public class Workout extends SherlockFragment implements LocationListener {
 				// reset Workouts Each Time
 				currentWorkoutInfoWNC.resetWorkoutInfo();
 				currentWorkoutInfoRK.resetWorkoutInfo();
+				map.clear();
 				line = new PolylineOptions();
-				currentWorkoutInfoRK.SetWorkoutType(WorkoutType.getSelectedItem().toString());
-				currentWorkoutInfoRK.SetEquipmentUsed("None");
+				
 				//TODO need to make function for overall Workout Initialization
 				
 				Criteria gpsCriteria = getGpsCriteria();
@@ -171,7 +180,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
 				// Push Locations
 				try {
-					new PushLocations().execute(1);
+					//new PushLocations().execute(1);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -239,10 +248,9 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// Posts the workout for the coordinates gathered between start and
 			// stop
 			//
-			APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,currentWorkoutInfoRK);
-			MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getFragmentManager());
-			MYSQLCOMM.UpdateMiles();
-			//TODO: Add Check to see if any distance was done inside WNC if so, submit to database.
+		
+			SubmitWorkoutDialog SD = new SubmitWorkoutDialog();
+			SD.show(getSherlockActivity().getFragmentManager(),"SubmitWorkoutDialogNotice");
 			SubmitWorkout.setEnabled(false);
 	};
 
@@ -286,9 +294,11 @@ public class Workout extends SherlockFragment implements LocationListener {
 		{
 			//add to both Run keeper location array, and WNCMilers Location Array
 			currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
-			currentWorkoutInfoWNC.UpdateDistTraveled();
+			Double Traveled = currentWorkoutInfoWNC.UpdateDistTraveled();
 			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
 			currentWorkoutInfoRK.UpdateDistTraveled();
+			lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled));
+			TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled)*1000));
 		}
 		else//Just add into Run Keeper Location Array
 		{
@@ -326,13 +336,17 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private void Drawline(LatLng PreviousLocation, LatLng CurLoc, long pace)
 	{
 		line.width(5);
-		if (pace > 360000)line.color(Color.parseColor("#FF0000 "));
-		else if(pace > 42000)line.color(Color.parseColor("#FF5500"));
-		else if(pace > 48000)line.color(Color.parseColor("#FFBB00"));
-		else if(pace > 54000)line.color(Color.parseColor("#FFFF00"));
-		else if(pace > 60000)line.color(Color.parseColor("#BBFF00"));
-		else if(pace > 66000)line.color(Color.parseColor("#55FF00"));
-		else if(pace > 72000)line.color(Color.parseColor("#00FF00"));
+		
+		//line.color(Color.RED);
+		if (pace < 360000)line.color(Color.rgb(255, 0, 0));
+		else if(pace < 42000)line.color(Color.rgb(255, 85, 0));
+		else if(pace < 48000)line.color(Color.rgb(255, 187, 0));
+		else if(pace < 54000)line.color(Color.rgb(255, 255, 0));
+		else if(pace < 60000)line.color(Color.rgb(187, 255, 0));
+		else if(pace < 66000)line.color(Color.rgb(85, 255, 0));
+		else line.color(Color.rgb(0, 255, 0));
+		//else if(pace < 72000)line.color(Color.parseColor("#00FF00"));
+		
 			
         
         line.add(PreviousLocation,CurLoc);
@@ -426,6 +440,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		
 		Start_StopButton.getBackground().setColorFilter(Color.parseColor("#CCFF66"), PorterDuff.Mode.MULTIPLY);
 		SubmitWorkout.getBackground().setColorFilter(Color.parseColor("#E65050"), PorterDuff.Mode.MULTIPLY);
+		TotalMilesProgressBar.setProgress((int)currentWorkoutInfoWNC.TotalWNCMilesForUser);
 	}
 	
 
