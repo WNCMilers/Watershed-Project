@@ -304,7 +304,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		//String.format("New Location \n Longitude: %1$s \n Latitude: %2$s",
 		//CurrentLocation.GetLongitude(), CurrentLocation.GetLatitude());
 		double Distance = currentWorkoutInfoRK.GetCurDistTraveled();
-		lblDist.setText(Double.toString(Distance) + " miles");
+		lblDist.setText(String.format("%.2f", Distance) + " mi.");
 		
 		long timeElapsed = SystemClock.elapsedRealtime() - WorkoutTimer.getBase();
 		long pace = 0;
