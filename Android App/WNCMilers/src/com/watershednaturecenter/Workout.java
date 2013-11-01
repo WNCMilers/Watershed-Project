@@ -179,10 +179,11 @@ public class Workout extends SherlockFragment implements LocationListener {
 				
 				//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
 				//locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
+				
 				// Push Locations
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
 				try {
-					//new PushLocations().execute(1);
+					new PushLocations().execute(1);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -214,7 +215,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	public void DisplayLoginPopup()
 	{
 		LoginDialog LD = new LoginDialog();
-		LD.show(getSherlockActivity().getFragmentManager(),"LoginDialogNotice");
+		LD.show(getSherlockActivity().getSupportFragmentManager(),"LoginDialogNotice");
 	}
 	
 	public boolean LoginStatus()
@@ -252,7 +253,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 			//
 		
 			SubmitWorkoutDialog SD = new SubmitWorkoutDialog();
-			SD.show(getSherlockActivity().getFragmentManager(),"SubmitWorkoutDialogNotice");
+			SD.show(getSherlockActivity().getSupportFragmentManager(),"SubmitWorkoutDialogNotice");
 			SubmitWorkout.setEnabled(false);
 	};
 

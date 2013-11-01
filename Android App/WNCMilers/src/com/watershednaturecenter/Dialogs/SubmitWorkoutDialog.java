@@ -3,7 +3,7 @@ package com.watershednaturecenter.Dialogs;
 
 
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -58,7 +58,7 @@ public class SubmitWorkoutDialog extends DialogFragment{
 		 currentWorkoutInfoRK.SetWorkoutType(WorkoutType.getSelectedItem().toString());
 		 currentWorkoutInfoRK.SetEquipmentUsed("None");
 	 	 APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,currentWorkoutInfoRK);
-		 MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getFragmentManager());
+		 MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
 		 MYSQLCOMM.UpdateMiles();
 		 //TODO: Add Check to see if any distance was done inside WNC if so, submit to database.
 	    dismiss();  

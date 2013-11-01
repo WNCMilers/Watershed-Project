@@ -152,7 +152,7 @@ public class MainActivity extends SherlockFragmentActivity
 	    	else
 	    	{
 	    		RKInstallDialog RkDialog = new RKInstallDialog();
-	    		RkDialog.show(this.getFragmentManager(), "RKInstallDialogNotice");
+	    		RkDialog.show(getSupportFragmentManager(), "RKInstallDialogNotice");
 	    	}
 	    	
 	    	

@@ -58,7 +58,7 @@ public class Membership_Signup extends SherlockFragment
             		
               	Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
             	getDataFromForm();
-            	MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getFragmentManager());
+            	MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
             	MYSQLCOMM.RegisterMember(member);
         	}
         });
