@@ -1,79 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:orientation="vertical" >
 
-    <Button
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".9"
+        android:orientation="vertical" >
+        
+            <RelativeLayout 
+                android:layout_width="fill_parent"
+        		android:layout_height="0dp"
+        		android:layout_weight=".1">              	
+                	
+                	
+
+                	<ProgressBar
+                	    android:id="@+id/progressBarMilesCompleted"
+                	    style="?android:attr/progressBarStyleHorizontal"
+                	    android:layout_width="fill_parent"
+                	    android:layout_height="wrap_content"
+                	    android:layout_centerHorizontal="true"
+            			android:layout_centerVertical="true"
+            			android:gravity="center_vertical|center_horizontal"
+            			android:layout_marginLeft="20dp"
+            			android:layout_marginRight="20dp"
+            			android:progressDrawable="@drawable/customprogressbar" />
+                	
+                	<TextView
+            		android:id="@+id/lblMilesCompleted"
+            		android:layout_width="wrap_content"
+           		 	android:layout_height="wrap_content"
+           		 	android:layout_centerHorizontal="true"
+           			android:gravity="center_horizontal"
+           			android:text="0.00 mi out of 25.00 mi completed"
+           			android:layout_below="@+id/progressBarMilesCompleted"/>
+            		
+
+            </RelativeLayout>
+            
+            
+            <fragment
+        		android:id="@+id/map"
+        		android:layout_width="match_parent"
+        		android:layout_height="0dp"
+        		android:layout_weight=".7"
+        		class="com.google.android.gms.maps.SupportMapFragment" />
+            
+            <RelativeLayout 
+                android:layout_width="fill_parent"
+        		android:layout_height="0dp"
+        		android:layout_weight=".1">
+                	<Chronometer
+           			 android:id="@+id/WorkoutTimer"
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Chronometer"
+            android:textSize="60dp" />
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/WorkoutTimer"
+            android:layout_marginTop="-10dp"
+            android:text="Time Elapsed" />
+            </RelativeLayout>
+
+                
+	<LinearLayout 
+    	android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight=".1"
+        android:orientation="horizontal">
+            <RelativeLayout 
+                android:layout_height="fill_parent"
+        		android:layout_width="0dp"
+        		android:layout_weight=".5">
+                <TextView
+            		android:id="@+id/lblPace"
+         			android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerHorizontal="true"
+            		android:layout_centerVertical="true"
+            		android:gravity="center_vertical|center_horizontal"
+					android:text="0:0:0" 
+					android:textSize="50dp"/>
+		        <TextView
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_centerHorizontal="true"
+		            android:gravity="center_horizontal"
+		            android:layout_below="@+id/lblPace"
+		            android:layout_marginTop="-10dp"
+		            android:text="Pace" />
+            </RelativeLayout>
+        
+
+        
+        	<RelativeLayout 
+        	    android:layout_height="fill_parent"
+        		android:layout_width="0dp"
+        		android:layout_weight=".5">
+                <TextView
+		            android:id="@+id/lblDist"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_centerHorizontal="true"
+            		android:layout_centerVertical="true"
+            		android:gravity="center_vertical|center_horizontal"
+		            android:text="0.0 mi." 
+		            android:textSize="50dp"/>
+		        <TextView
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_centerHorizontal="true"
+		            android:gravity="center_horizontal"
+		            android:layout_below="@+id/lblDist"
+		            android:layout_marginTop="-10dp"
+		            android:text="Distance" />
+                
+            </RelativeLayout>
+        
+            </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight=".1"
+        android:orientation="horizontal">
+        
+        <Button
+        android:id="@+id/Start_StopWorkout"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight=".5"
+        android:layout_marginTop="1dp"
+        android:text="Start Workout"
+        android:textSize="30dp" />
+        
+        <Button
         android:id="@+id/SubmitWorkout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:minWidth="250dip"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight=".5"
+        android:layout_marginBottom="1dp"
         android:state_enabled="false"
         android:text="Submit Workout"
         android:textSize="30dp" />
+    </LinearLayout>
     
-    <!--<fragment
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="com.google.android.gms.maps.SupportMapFragment" />-->
-
-    <Chronometer
-        android:id="@+id/WorkoutTimer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/SubmitWorkout"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="Chronometer"
-        android:textSize="40dp" />
-
-    <Button
-        android:id="@+id/Start_StopWorkout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/WorkoutTimer"
-        android:layout_alignParentLeft="true"
-        android:minHeight="48dip"
-        android:minWidth="250dip"
-        android:text="Start Workout"
-        android:textSize="30dp" />
-
-    <TextView
-        android:id="@+id/lblWorkoutType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="Select Workout Type:" />
-
-    <Spinner
-        android:id="@+id/WorkoutType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/lblWorkoutType"
-        android:entries="@array/workoutType_array"
-        android:gravity="center_horizontal" />
-
-    <TextView
-        android:id="@+id/lblPace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/SubmitWorkout"
-        android:layout_marginTop="46dp"
-        android:text="Current Pace" />
-
-    <TextView
-        android:id="@+id/lblDist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/lblPace"
-        android:layout_alignBottom="@+id/lblPace"
-        android:layout_alignParentRight="true"
-        android:text="Distance Traveled" />
-    
-</RelativeLayout>
+</LinearLayout>

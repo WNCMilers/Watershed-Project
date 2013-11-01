@@ -36,8 +36,7 @@
            		 	android:layout_centerHorizontal="true"
            			android:gravity="center_horizontal"
            			android:text="0.00 mi out of 25.00 mi completed"
-           			android:layout_below="@+id/progressBarMilesCompleted"
-           			android:textSize="10dp"/>
+           			android:layout_below="@+id/progressBarMilesCompleted"/>
             		
 
             </RelativeLayout>
@@ -50,87 +49,67 @@
         		android:layout_weight=".6"
         		class="com.google.android.gms.maps.SupportMapFragment" />
             
-            <RelativeLayout 
+            <LinearLayout 
                 android:layout_width="fill_parent"
         		android:layout_height="0dp"
-        		android:layout_weight=".125">
+        		android:layout_weight=".15">
                 	<Chronometer
            			 android:id="@+id/WorkoutTimer"
             		android:layout_width="wrap_content"
             		android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-        	android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
             android:text="Chronometer"
-            android:textSize="30dp" />
+            android:textSize="60dp" />
             <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
             android:layout_below="@+id/WorkoutTimer"
-            android:layout_marginTop="-12dp"
-            android:text="Time Elapsed" 
-            android:textSize="10dp"/>
-            </RelativeLayout>
+            android:layout_marginTop="-10dp"
+            android:text="Time Elapsed" />
+            </LinearLayout>
 
                 
 	<LinearLayout 
-    	android:layout_height="0dp"
-        android:layout_width="fill_parent"
-        android:layout_weight=".125"
-        android:orientation="horizontal">
-            <RelativeLayout 
-                android:layout_height="fill_parent"
-        		android:layout_width="0dp"
-        		android:layout_weight=".5">
-                <TextView
-            		android:id="@+id/lblPace"
-         			android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_centerHorizontal="true"
-            		android:layout_centerVertical="true"
-            		android:gravity="center_vertical|center_horizontal"
-					android:text="0:0:0" 
-					android:textSize="30dp"/>
-		        <TextView
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_centerHorizontal="true"
-		            android:gravity="center_horizontal"
-		            android:layout_below="@+id/lblPace"
-		            android:layout_marginTop="-12dp"
-		            android:text="Pace" 
-		            android:textSize="10dp"/>
-            </RelativeLayout>
-        
+    	android:layout_width="fill_parent"
+     		android:layout_height="0dp"
+       		android:layout_weight=".15">
+        <TextView
+            android:id="@+id/lblPace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="0:0:0" 
+            android:textSize="50dp"  
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/lblPace"
+            android:layout_marginTop="-10dp"
+            android:text="Pace" />
 
-        
-        	<RelativeLayout 
-        	    android:layout_height="fill_parent"
-        		android:layout_width="0dp"
-        		android:layout_weight=".5">
-                <TextView
-		            android:id="@+id/lblDist"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_centerHorizontal="true"
-            		android:layout_centerVertical="true"
-            		android:gravity="center_vertical|center_horizontal"
-		            android:text="0.0 mi." 
-		            android:textSize="30dp"/>
-		        <TextView
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_centerHorizontal="true"
-		            android:gravity="center_horizontal"
-		            android:layout_below="@+id/lblDist"
-		            android:layout_marginTop="-12dp"
-		            android:text="Distance" 
-		            android:textSize="10dp"/>
-                
-            </RelativeLayout>
-        
+        <TextView
+            android:id="@+id/lblDist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="0.0 mi." 
+            android:textSize="50dp" 
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/lblDist"
+            android:layout_marginTop="-10dp"
+            android:text="Distance" />
             </LinearLayout>
     </LinearLayout>
 
@@ -147,7 +126,7 @@
         android:layout_weight=".5"
         android:layout_marginTop="1dp"
         android:text="Start Workout"
-        android:textSize="15dp" />
+        android:textSize="10dp" />
         
         <Button
         android:id="@+id/SubmitWorkout"
@@ -157,7 +136,7 @@
         android:layout_marginBottom="1dp"
         android:state_enabled="false"
         android:text="Submit Workout"
-        android:textSize="15dp" />
+        android:textSize="10dp" />
     </LinearLayout>
     
 </LinearLayout>
