@@ -12,7 +12,9 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.watershednaturecenter.MySQLConnector;
 import com.watershednaturecenter.R;
@@ -29,6 +31,7 @@ public class SubmitWorkoutDialog extends DialogFragment{
 	private HealthGraphApi APIWORKER;
 	Button mButton;  
 	Spinner WorkoutType;  
+	EditText WorkoutNotes;
 	 onSubmitListener mListener;  
 	 String text = "";  
 	  
@@ -42,21 +45,22 @@ public class SubmitWorkoutDialog extends DialogFragment{
 	 currentWorkoutInfoRK = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutRK();
 	 APIWORKER = ((WNC_MILERS) getActivity().getApplication()).get_APIWORKER();
 	  final Dialog dialog = new Dialog(getActivity());  
-	  dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);  
+	  dialog.setTitle("Details about workout");
 	  dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,  
 	    WindowManager.LayoutParams.FLAG_FULLSCREEN);  
 	  dialog.setContentView(R.layout.submit_workout_dialog);  
-	  dialog.getWindow().setBackgroundDrawable(  
-	    new ColorDrawable(Color.TRANSPARENT));  
 	  dialog.show();  
 	  mButton = (Button) dialog.findViewById(R.id.button1);  
-	  WorkoutType = (Spinner) dialog.findViewById(R.id.WorkoutType);  
+	  WorkoutType = (Spinner) dialog.findViewById(R.id.WorkoutType); 
+	  WorkoutNotes = (EditText) dialog.findViewById(R.id.WorkoutNotesTxt);
 	  mButton.setOnClickListener(new OnClickListener() {  
 	  
 	   @Override  
 	   public void onClick(View v) {
 		 currentWorkoutInfoRK.SetWorkoutType(WorkoutType.getSelectedItem().toString());
+		 currentWorkoutInfoWNC.SetWorkoutType(WorkoutType.getSelectedItem().toString());
 		 currentWorkoutInfoRK.SetEquipmentUsed("None");
+		 currentWorkoutInfoRK.SetWorkoutNotes(WorkoutNotes.getText().toString());
 	 	 APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,currentWorkoutInfoRK);
 		 MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
 		 MYSQLCOMM.UpdateMiles();

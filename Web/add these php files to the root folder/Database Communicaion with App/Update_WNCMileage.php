@@ -4,7 +4,8 @@ mysql_select_db("DATABASE");
 
 $RKID = $_POST['RKID'];
 $Dist = (float)$_POST['Distance'];
-$q=mysql_query("INSERT INTO workouts (RK_ID, Distance, WorkoutType) VALUES ('$RKID', '$Dist','FIX')");
+$WorkoutType = (float)$_POST['WorkoutType'];
+$q=mysql_query("INSERT INTO workouts (RK_ID, Distance, WorkoutType) VALUES ('$RKID', '$Dist','$WorkoutType')");
 while($e=mysql_fetch_assoc($q))
         $output[]=$e;
 

@@ -12,21 +12,38 @@
            		 	android:layout_height="wrap_content"
             		android:layout_alignParentLeft="true"
             		android:layout_alignParentTop="true"
+            		android:layout_gravity="left"
             		android:text="Select Workout Type:" />
                 	
                 	<Spinner
             		android:id="@+id/WorkoutType"
-           			android:layout_width="87dp"
+           			android:layout_width="wrap_content"
             		android:layout_height="wrap_content"
-            		android:entries="@array/workoutType_array"
-            		android:gravity="center_horizontal" />
+            		android:layout_gravity="left"
+            		android:entries="@array/workoutType_array"/>
 
      <requestFocus />
+	
+     <TextView
+            		android:id="@+id/lblWorkoutNotes"
+            		android:layout_width="wrap_content"
+           		 	android:layout_height="wrap_content"
+            		android:layout_alignParentLeft="true"
+            		android:layout_gravity="left"
+            		android:text="WorkoutNotes:" />
+     <EditText
+         android:id="@+id/WorkoutNotesTxt"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:ems="10"
+         android:inputType="textMultiLine"
+         android:layout_gravity="left" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Submit" />
+        android:text="Submit"
+        android:layout_gravity="left" />
 
 </LinearLayout>
