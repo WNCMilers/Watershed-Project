@@ -90,13 +90,13 @@ public class MySQLConnector{
 			try
 			{
  				double distance = currentWorkout.GetCurDistTraveled();
- 				String WorkoutNotes = currentWorkout.GetWorkoutNotes();
+ 				String WorkoutType = currentWorkout.GetWorkoutType();
 				Integer RKlogin = currentWorkout.getRK_ID();
 				
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("RKID", RKlogin.toString()));
 				params.add(new BasicNameValuePair("Distance",String.valueOf(distance)));
-				params.add(new BasicNameValuePair("WorkoutNotes",WorkoutNotes));
+				params.add(new BasicNameValuePair("WorkoutType",WorkoutType));
 				DefaultHttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(url_Update_WNCMileage);
                 httpPost.setEntity(new UrlEncodedFormEntity(params));
