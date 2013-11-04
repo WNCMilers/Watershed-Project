@@ -85,7 +85,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 		currentWorkoutInfoRK = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutRK(); 
 		
 		
-		
 		View view = inflater.inflate(R.layout.workout, container, false);
 		lblDist = (TextView) view.findViewById(R.id.lblDist);
 		lblPace = (TextView) view.findViewById(R.id.lblPace);
@@ -93,7 +92,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser));
 		TotalMilesProgressBar = (ProgressBar)view.findViewById(R.id.progressBarMilesCompleted);
 		TotalMilesProgressBar.setMax(25000);
-		TotalMilesProgressBar.setProgress((int)(currentWorkoutInfoWNC.TotalWNCMilesForUser*1000));
+		
 		
 		SupportMapFragment fm = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
 		
@@ -147,7 +146,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 				
 		
 		initializelayout();
-		return view;
+		if(view != null) { return view;}
+		else return null;
 	}
 
 	
@@ -443,16 +443,15 @@ public class Workout extends SherlockFragment implements LocationListener {
 		
 		Start_StopButton.getBackground().setColorFilter(Color.parseColor("#CCFF66"), PorterDuff.Mode.MULTIPLY);
 		SubmitWorkout.getBackground().setColorFilter(Color.parseColor("#E65050"), PorterDuff.Mode.MULTIPLY);
-		TotalMilesProgressBar.setProgress((int)currentWorkoutInfoWNC.TotalWNCMilesForUser);
+		TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser)*1000));
 	}
-	
-	public void onDestroyView() {
-        super.onDestroyView(); 
-        Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));  
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.remove(fragment);
-        ft.commit();
-}
-	
+
+	@Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Fragment f = (getFragmentManager().findFragmentById(R.id.map));  
+        if (f != null && f.isResumed()) 
+            getFragmentManager().beginTransaction().remove(f).commit();
+    }
 
 }
