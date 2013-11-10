@@ -28,7 +28,7 @@ public class Membership_Signup2 extends Activity
 	private String firstName, lastName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
 	private Button submitButton;
 	private EditText firstNameField, lastNameField, addressLine1Field, addressLine2Field, cityField, zipCodeField, phoneNumberField, emailAddressField;
-	private Spinner stateSpinner, membershipLevelSpinner;
+	private Spinner stateSpinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class Membership_Signup2 extends Activity
 		zipCodeField = (EditText) findViewById(R.id.zipCode);
 		phoneNumberField = (EditText) findViewById(R.id.PhoneNumber);
 		emailAddressField = (EditText) findViewById(R.id.EmailAddress);
-		membershipLevelSpinner = (Spinner) findViewById(R.id.MembershipLevelSelection);
+		//membershipLevelSpinner = (Spinner) findViewById(R.id.MembershipLevelSelection);
 		
 		stateSpinner.setSelection(13);
 		
@@ -71,7 +71,7 @@ public class Membership_Signup2 extends Activity
 		zipCode = zipCodeField.getText().toString().trim();
 		phoneNumber = phoneNumberField.getText().toString().trim();
 		emailAddress = emailAddressField.getText().toString().trim();
-		membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
+		//membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
 		
 		if (!completeFormValidityCheck()){
 			Toast.makeText(this, "Thanks " + firstName + " " + lastName, Toast.LENGTH_SHORT).show();

@@ -1,5 +1,8 @@
 package com.watershednaturecenter;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 import android.content.Context;
@@ -27,8 +30,9 @@ public class Membership_Signup extends SherlockFragment
     private MembershipInfo member = new MembershipInfo();
 	//private String firstName, lastName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
 	private Button submitButton;
-	private EditText firstNameField, lastNameField, addressLine1Field, addressLine2Field, cityField, zipCodeField, phoneNumberField, emailAddressField;
-	private Spinner stateSpinner, membershipLevelSpinner;
+	private EditText firstNameField, lastNameField, addressLine1Field, addressLine2Field, cityField, 
+						zipCodeField, phoneNumberField, emailAddressField, birthDayField, birthYearField;
+	private Spinner designationSpinner, stateSpinner, monthSpinner;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +40,7 @@ public class Membership_Signup extends SherlockFragment
 	{
 		View view = inflater.inflate(R.layout.membership_sign_up, container, false);
 		
+		designationSpinner = (Spinner) view.findViewById(R.id.DesignationSelection);
 		firstNameField = (EditText) view.findViewById(R.id.firstName);
 		lastNameField = (EditText) view.findViewById(R.id.lastName);
 		addressLine1Field = (EditText) view.findViewById(R.id.addressLine1);
@@ -45,8 +50,11 @@ public class Membership_Signup extends SherlockFragment
 		zipCodeField = (EditText) view.findViewById(R.id.zipCode);
 		phoneNumberField = (EditText) view.findViewById(R.id.PhoneNumber);
 		emailAddressField = (EditText) view.findViewById(R.id.EmailAddress);
-		membershipLevelSpinner = (Spinner) view.findViewById(R.id.MembershipLevelSelection);
-		
+		monthSpinner = (Spinner) view.findViewById(R.id.BirthMonthSpinner);
+		birthDayField = (EditText) view.findViewById(R.id.DayEditText);
+		birthYearField = (EditText) view.findViewById(R.id.YearEditText);
+		//membershipLevelSpinner = (Spinner) view.findViewById(R.id.MembershipLevelSelection);
+				
 		stateSpinner.setSelection(13);
 		
 		submitButton = (Button) view.findViewById(R.id.submitButton);
@@ -56,17 +64,19 @@ public class Membership_Signup extends SherlockFragment
             	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
             		
-              	Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
-            	getDataFromForm();
-            	MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
-            	MYSQLCOMM.RegisterMember(member);
+              	//Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
+            	if (getDataFromForm()){
+            	    MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
+	            	MYSQLCOMM.RegisterMember(member);
+            	}
         	}
         });
 		return view;
 	}
 	
 	//Function to load data from the textFields/Spinners into local variables
-	public void getDataFromForm(){
+	public boolean getDataFromForm(){
+		member.designation = designationSpinner.getSelectedItem().toString();
 		member.firstName = firstNameField.getText().toString().trim();
 		member.lastName = lastNameField.getText().toString().trim();
 		member.addressLine1 = addressLine1Field.getText().toString().trim();
@@ -76,11 +86,24 @@ public class Membership_Signup extends SherlockFragment
 		member.zipCode = zipCodeField.getText().toString().trim();
 		member.phoneNumber = phoneNumberField.getText().toString().trim();
 		member.emailAddress = emailAddressField.getText().toString().trim();
-		member.membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
+		member.membershipLevel = "Individual";
+		//member.membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
+		
+		GregorianCalendar birthdate = new GregorianCalendar (Integer.parseInt(birthYearField.getText().toString()), 
+				monthSpinner.getSelectedItemPosition(), 
+				Integer.parseInt(birthDayField.getText().toString()));
+		
+		SimpleDateFormat ft =  new SimpleDateFormat ("MM/dd/yyyy");
+		ft.setCalendar(birthdate);
+		
+		member.birthdate = ft.format(birthdate.getTime());
 		
 		if (!completeFormValidityCheck()){
 			Toast.makeText(getSherlockActivity(), "Thanks " + member.firstName + " " + member.lastName, Toast.LENGTH_SHORT).show();
+			return true;
 		}
+		
+		return false;
 	}
 	
 	public boolean completeFormValidityCheck(){
@@ -157,9 +180,5 @@ public class Membership_Signup extends SherlockFragment
 	
 	public boolean checkValidity(String regex, String text){
 		return Pattern.matches(regex, text);
-	}
-	
-	public void sendRegistrationForm(){
-		//Toast.makeText(getSherlockActivity(), "Thanks " + fullName, Toast.LENGTH_SHORT).show();
 	}
 }

@@ -1,6 +1,7 @@
 package com.watershednaturecenter;
 
 public class MembershipInfo {
+	String designation;
 	String firstName;
 	String lastName;
 	String addressLine1;
@@ -11,4 +12,5 @@ public class MembershipInfo {
 	String phoneNumber;
 	String emailAddress;
 	String membershipLevel;
+	String birthdate;
 }
