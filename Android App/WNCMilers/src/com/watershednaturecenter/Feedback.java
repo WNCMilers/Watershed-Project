@@ -55,7 +55,7 @@ public class Feedback extends SherlockFragment{
 		
 		feedbackSubmitButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-            	String feedbackDestinationEmailList[] = {"Kharmon@siue.edu", "skatzer@siue.edu", "dmoyer@siue.edu"};  
+            	String feedbackDestinationEmailList[] = {"wncdevelopers@gmail.com"};  
                 
             	//Hides softKeyboard
             	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

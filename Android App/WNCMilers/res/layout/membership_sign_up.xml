@@ -12,6 +12,41 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
     
+    <LinearLayout
+    android:id="@+id/nameLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    
+    	<Spinner
+		    android:id="@+id/DesignationSelection"
+		    android:layout_width="0dp"
+	        android:layout_weight=".20"
+	        android:layout_height="wrap_content"
+		    android:entries="@array/designation_array"
+		    android:spinnerMode="dialog" />
+    
+        <EditText
+	        android:id="@+id/firstName"
+	        android:layout_width="0dp"
+	        android:layout_weight=".40"
+	        android:layout_height="wrap_content"
+	        android:inputType="textCapWords"
+	        android:ems="10"
+	        android:hint="@string/first_Name" >
+	        <requestFocus />
+	    </EditText>
+	    
+         <EditText
+	        android:id="@+id/lastName"
+	        android:layout_width="0dp"
+	        android:layout_weight=".40"
+	        android:layout_height="wrap_content"
+	        android:ems="10"
+	        android:inputType="textCapWords"
+	        android:hint="@string/last_Name" />
+</LinearLayout>
+
 	    <EditText
 	        android:id="@+id/addressLine1"
 	        android:layout_width="match_parent"
@@ -53,34 +88,6 @@
 	        android:ems="10"
 	        android:hint="@string/zip_code"
 	        android:inputType="number" />
-	    
-<LinearLayout
-    android:id="@+id/nameLayout"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    
-        <EditText
-	        android:id="@+id/firstName"
-	        android:layout_width="0dp"
-	        android:layout_weight=".5"
-	        android:layout_height="wrap_content"
-	        android:inputType="textCapWords"
-	        android:ems="10"
-	        android:hint="@string/first_Name" >
-	        <requestFocus />
-	    </EditText>
-	    
-         <EditText
-	        android:id="@+id/lastName"
-	        android:layout_width="0dp"
-	        android:layout_weight=".5"
-	        android:layout_height="wrap_content"
-	        android:ems="10"
-	        android:inputType="textCapWords"
-	        android:hint="@string/last_Name" />
-</LinearLayout>
-
 	    <Spinner
 	        android:id="@+id/StateSelection"
 	        android:layout_width="96dp"
@@ -113,16 +120,6 @@
 	        android:hint="@string/person_email_address"
 	        android:inputType="textEmailAddress" />
 
-	    <Spinner
-	        android:id="@+id/MembershipLevelSelection"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_below="@+id/EmailAddress"
-	        android:entries="@array/membership_level_array"
-	        android:prompt="@string/membership_level"
-	        android:spinnerMode="dialog" />
-
 	    <Button
 	        android:id="@+id/submitButton"
 	        android:layout_width="match_parent"
@@ -130,6 +127,53 @@
 	        android:layout_alignParentBottom="true"
 	        android:layout_alignParentLeft="true"
 	        android:text="@string/submit" />
-	   
+
+		<LinearLayout
+		    android:id="@+id/BirthdateLayout"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_above="@+id/submitButton"
+		    android:layout_alignParentLeft="true"
+		    android:layout_below="@+id/EmailAddress"
+		    android:orientation="horizontal" >
+
+			<TextView
+			    android:id="@+id/textView1"
+			    android:layout_width="wrap_content"
+			    android:layout_height="34dp"
+			    android:drawablePadding="5dp"
+			    android:text="@string/BirthDate"
+			    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+		    <Spinner
+		        android:id="@+id/BirthMonthSpinner"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="0.16"
+		        android:entries="@array/month_array"
+		        android:spinnerMode="dialog" />
+
+		    <EditText
+		        android:id="@+id/DayEditText"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight=".15"
+		        android:ems="10"
+		        android:hint="@string/Day"
+		        android:imeOptions="actionNext"
+		        android:inputType="number" />
+
+		    <EditText
+		        android:id="@+id/YearEditText"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight=".15"
+		        android:ems="10"
+		        android:hint="@string/Year"
+		        android:imeOptions="actionDone"
+		        android:inputType="number" />
+
+		</LinearLayout>
+
 	</RelativeLayout>
 </ScrollView>

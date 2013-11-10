@@ -212,6 +212,7 @@ public class MySQLConnector{
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				//params.add(new BasicNameValuePair("RKID", RKlogin.toString()));
 				//TODO: Change these to proper user info stuff
+				params.add(new BasicNameValuePair("Title", arg0[0].designation));
 				params.add(new BasicNameValuePair("FirstName", arg0[0].firstName));
 				params.add(new BasicNameValuePair("LastName", arg0[0].lastName));
 				params.add(new BasicNameValuePair("AddressLine1", arg0[0].addressLine1));
@@ -221,10 +222,9 @@ public class MySQLConnector{
 				params.add(new BasicNameValuePair("Zip", arg0[0].zipCode));
 				params.add(new BasicNameValuePair("Phone", arg0[0].phoneNumber));
 				params.add(new BasicNameValuePair("EmailAddress", arg0[0].emailAddress));
-				//params.add(new BasicNameValuePair("membershiplevel", arg0[0].membershipLevel));
-				//params.add(new BasicNameValuePair("birthdate", ));
-				//params.add(new BasicNameValuePair("end", ));
-				
+				params.add(new BasicNameValuePair("membershiplevel", arg0[0].membershipLevel));
+				params.add(new BasicNameValuePair("BirthDate", arg0[0].birthdate));
+								
 								
 				DefaultHttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(url_Register_Member);

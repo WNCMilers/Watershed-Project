@@ -71,6 +71,21 @@
 		<item>WY</item>
     </string-array>
     
+     <string-array name="month_array">
+		<item>January</item>
+		<item>February</item>
+		<item>March</item>
+		<item>April</item>
+		<item>May</item>
+		<item>June</item>
+		<item>July</item>
+		<item>August</item>
+		<item>September</item>
+		<item>October</item>
+		<item>November</item>
+		<item>December</item>
+	</string-array>
+	
      <string-array name="membership_level_array">
 		<item>Scholastic - $20</item>
 		<item>Individual - $25</item>
@@ -78,6 +93,14 @@
 		<item>Small Business - $100</item>
 		<item>Corporation - $1000</item>
 	</string-array>
+	
+     <string-array name="designation_array">
+		<item>Mr.</item>
+		<item>Mrs.</item>
+		<item>Ms.</item>
+		<item>Miss</item>
+	</string-array>
+	
 	<string name="zip_code">Zip Code</string>
 	<string name="city">City</string>
 	<string name="runkeeperlogin">Login</string>
@@ -98,4 +121,8 @@
 		<string name="AttachImage">Attach Image</string>
 		<string name="attach_screenshot">Attach Screenshot</string>
 		<string name="RKLaunchtxt">Launch RunKeeper</string>
+		<string name="BirthDate">Birthdate:</string>
+		<string name="Day">Day</string>
+		<string name="Year">Year</string>
+		<string name="membershipLevel">Membership Level</string>
 </resources>
