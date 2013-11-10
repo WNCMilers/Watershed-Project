@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.format.Time;
 import android.view.Gravity;
@@ -252,9 +255,10 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// stop
 			//
 		
-			SubmitWorkoutDialog SD = new SubmitWorkoutDialog();
-			SD.show(getSherlockActivity().getSupportFragmentManager(),"SubmitWorkoutDialogNotice");
-			SubmitWorkout.setEnabled(false);
+			SubmitWorkoutDialog SD = new SubmitWorkoutDialog(this.getSherlockActivity());
+			SD.setTargetFragment(this, 0);
+			FragmentManager FM = getSherlockActivity().getSupportFragmentManager();
+			SD.show(FM,"SubmitWorkoutDialogNotice");
 	};
 
 	@Override

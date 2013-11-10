@@ -374,6 +374,10 @@ public class HealthGraphApi {
                 currentWorkout.SetRK_ID(Integer.parseInt(jsonString.substring(jsonString.indexOf("userID")+8, jsonString.indexOf("userID")+16)));
                 httpCalls GetMilesHTTPCall = new httpCalls();
     			GetMilesHTTPCall.GetCompletedMileage();
+    			
+    			Intent workoutIntent = new Intent(calledfrom, MainActivity.class);
+    			workoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    			calledfrom.startActivity(workoutIntent);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -381,8 +385,8 @@ public class HealthGraphApi {
     	
     	@Override
     	protected void onPostExecute(Double result) {
-    		// TODO Auto-generated method stub    		
-    		calledfrom.startActivity(new Intent(calledfrom, MainActivity.class));
+    		// TODO Auto-generated method stub
+    		
     		this.cancel(true);
     	}
 

@@ -1,5 +1,6 @@
 package com.watershednaturecenter.Dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import com.watershednaturecenter.Login;
 
 
 public class LoginDialog extends DialogFragment{
+	Activity currentActivity = getActivity();
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -19,7 +21,9 @@ public class LoginDialog extends DialogFragment{
                .setPositiveButton("Login", new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int id) {
                 	   Intent i = new Intent(getActivity(), Login.class);
+                	   i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 	   startActivity(i);
+                	   
                    }
                })
                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
