@@ -3,6 +3,7 @@ mysql_connect("HOST","USERNAME","PASSWORD");
 mysql_select_db("Database");
 
 //prevent sql injection:
+$RKID = mysql_real_escape_string($RKID);
 $designation = mysql_real_escape_string($designation);
 $firstname = mysql_real_escape_string($firstname);
 $lastname = mysql_real_escape_string($lastname);
@@ -19,6 +20,7 @@ $end= date('Y-m-d', strtotime('+1 year'));
 $membershiplevel = mysql_real_escape_string($membershiplevel);
 //$emailEnd = date('m-d-Y', strtotime($end));
 
+$RKID = $_POST['RKID'];
 $designation = $_POST['Title'];
 $firstname = $_POST['FirstName'];
 $lastname = $_POST['LastName'];
@@ -33,7 +35,9 @@ $sqlBirthdate = $_POST['BirthDate'];
 $membershiplevel = $_POST['membershiplevel'];
 //$end= $_POST['MembershipExpiration'];
 
-$q=mysql_query("INSERT INTO users (Title, FirstName, LastName, AddressLine1, AddressLine2, City, State, Zip, EmailAddress, BirthDate, Phone, MembershipExpiration, MembershipType) VALUES ('$designation', '$firstname', '$lastname', '$address1', '$address2', '$city', '$state', '$zip', '$email', '$sqlBirthdate', '$phone', '$end', '$membershiplevel')");
+$q=mysql_query("INSERT INTO users (RunkeeperID, Title, FirstName, LastName, AddressLine1, AddressLine2, City, State, Zip, EmailAddress, BirthDate, Phone, MembershipExpiration, MembershipType) VALUES ('$RKID','$designation', '$firstname', '$lastname', '$address1', '$address2', '$city', '$state', '$zip', '$email', '$sqlBirthdate', '$phone', '$end', '$membershiplevel')") or die (mysql_error());
+$q=mysql_query("INSERT INTO membership_redeemed (Membership_RK_ID) VALUES ('$RKID')") or die (mysql_error());
+
 while($e=mysql_fetch_assoc($q))
         $output[]=$e;
 

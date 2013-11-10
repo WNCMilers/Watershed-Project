@@ -207,10 +207,13 @@ public class MySQLConnector{
 		protected String doInBackground(MembershipInfo... arg0) {
 			try
 			{
- 				//Integer RKlogin = currentWorkout.getRK_ID();
+				
+ 				Integer RKlogin = currentWorkout.getRK_ID();
+ 				if (RKlogin.toString().isEmpty())
+ 					throw new RuntimeException("Run Keeper ID is NULL");
 				
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				//params.add(new BasicNameValuePair("RKID", RKlogin.toString()));
+				params.add(new BasicNameValuePair("RKID", RKlogin.toString()));
 				//TODO: Change these to proper user info stuff
 				params.add(new BasicNameValuePair("Title", arg0[0].designation));
 				params.add(new BasicNameValuePair("FirstName", arg0[0].firstName));
