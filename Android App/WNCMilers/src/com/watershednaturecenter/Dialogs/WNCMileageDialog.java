@@ -43,6 +43,7 @@ public class WNCMileageDialog extends DialogFragment{
                 public void onClick(DialogInterface dialog, int id) {
                 	dialog.dismiss();
                 	Intent i = new Intent(getActivity(), Membership_Signup2.class);
+                	i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
               	   	startActivity(i);
                 }
             })

@@ -13,7 +13,7 @@
             <RelativeLayout 
                 android:layout_width="fill_parent"
         		android:layout_height="0dp"
-        		android:layout_weight=".15">              	
+        		android:layout_weight=".175">              	
                 	
                 	
 
@@ -21,12 +21,12 @@
                 	    android:id="@+id/progressBarMilesCompleted"
                 	    style="?android:attr/progressBarStyleHorizontal"
                 	    android:layout_width="fill_parent"
-                	    android:layout_height="wrap_content"
+                	    android:layout_height="10dp"
                 	    android:layout_centerHorizontal="true"
-            			android:layout_centerVertical="true"
-            			android:gravity="center_vertical|center_horizontal"
+            			android:gravity="center_horizontal"
             			android:layout_marginLeft="20dp"
             			android:layout_marginRight="20dp"
+            			android:layout_marginTop="40dp"
             			android:progressDrawable="@drawable/customprogressbar" />
                 	
                 	<TextView
@@ -37,6 +37,17 @@
            			android:gravity="center_horizontal"
            			android:text="0.00 mi out of 25.00 mi completed"
            			android:layout_below="@+id/progressBarMilesCompleted"
+           			android:textSize="10dp"/>
+                	
+                	<Button
+            		android:id="@+id/btnRedeemMembership"
+            		android:layout_width="wrap_content"
+           		 	android:layout_height="wrap_content"
+           		 	android:layout_centerHorizontal="true"
+           			android:gravity="center_horizontal"
+           			android:text="Redeem Membership"
+           			android:layout_above="@+id/progressBarMilesCompleted"
+           			android:layout_marginBottom="-40dp"
            			android:textSize="10dp"/>
             		
 
@@ -53,7 +64,7 @@
             <RelativeLayout 
                 android:layout_width="fill_parent"
         		android:layout_height="0dp"
-        		android:layout_weight=".125">
+        		android:layout_weight=".1125">
                 	<Chronometer
            			 android:id="@+id/WorkoutTimer"
             		android:layout_width="wrap_content"
@@ -78,7 +89,7 @@
 	<LinearLayout 
     	android:layout_height="0dp"
         android:layout_width="fill_parent"
-        android:layout_weight=".125"
+        android:layout_weight=".1125"
         android:orientation="horizontal">
             <RelativeLayout 
                 android:layout_height="fill_parent"
@@ -146,7 +157,7 @@
         android:layout_height="fill_parent"
         android:layout_weight=".5"
         android:layout_marginTop="1dp"
-        android:text="Start Workout"
+        android:text="New Workout"
         android:textSize="15dp" />
         
         <Button
@@ -156,7 +167,7 @@
         android:layout_weight=".5"
         android:layout_marginBottom="1dp"
         android:state_enabled="false"
-        android:text="Submit Workout"
+        android:text="Finish Workout"
         android:textSize="15dp" />
     </LinearLayout>
     

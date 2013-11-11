@@ -7,10 +7,12 @@ import android.graphics.PorterDuff;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -54,6 +56,7 @@ import com.watershednaturecenter.GPSItems.WorkoutInfo;
 public class Workout extends SherlockFragment implements LocationListener {
 	private Button Start_StopButton;
 	private Button SubmitWorkout;
+	private Button RedeemButton;
 	private Chronometer WorkoutTimer;
 	private ProgressDialog progress;
 	private TextView lblDist;
@@ -89,9 +92,16 @@ public class Workout extends SherlockFragment implements LocationListener {
 		
 		
 		View view = inflater.inflate(R.layout.workout, container, false);
+		RedeemButton = (Button)view.findViewById(R.id.btnRedeemMembership);
+		RedeemButton.setVisibility(View.INVISIBLE);
+		
 		lblDist = (TextView) view.findViewById(R.id.lblDist);
 		lblPace = (TextView) view.findViewById(R.id.lblPace);
 		lblTotalWNCMiles = (TextView) view.findViewById(R.id.lblMilesCompleted);
+		if (currentWorkoutInfoWNC.TotalWNCMilesForUser >= 25.0)
+		{
+			RedeemButton.setVisibility(View.VISIBLE);
+		}
 		lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser));
 		TotalMilesProgressBar = (ProgressBar)view.findViewById(R.id.progressBarMilesCompleted);
 		TotalMilesProgressBar.setMax(25000);
@@ -118,6 +128,16 @@ public class Workout extends SherlockFragment implements LocationListener {
 				onClickStart_StopTrackingBtn();
 			}
 		});
+		
+		RedeemButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(getActivity(), Membership_Signup2.class);
+            	i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          	   	startActivity(i);
+			}
+		});
+		
+		
 		SubmitWorkout = (Button) view.findViewById(R.id.SubmitWorkout);
 		SubmitWorkout.setEnabled(false);
 		SubmitWorkout.setOnClickListener(new OnClickListener() {
@@ -157,7 +177,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	public void onClickStart_StopTrackingBtn() {
 
 		
-		if (Start_StopButton.getText().equals("Start Workout")) {
+		if (Start_StopButton.getText().equals("New Workout")) {
 			if (!LoginStatus())
 			{
 				DisplayLoginPopup();
@@ -190,9 +210,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
-				Toast.makeText(getSherlockActivity(), "Begining Workout",
-						Toast.LENGTH_SHORT).show();
 				Start_StopButton.setText("Stop Workout");
 				SubmitWorkout.setEnabled(false);
 
@@ -206,9 +223,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		} else {
 			WorkoutTimer.stop();
 			locationManager.removeUpdates(this);
-			Toast.makeText(getSherlockActivity(), "Workout Stopped",
-					Toast.LENGTH_SHORT).show();
-			Start_StopButton.setText("Start Workout");
+			Start_StopButton.setText("New Workout");
 			SubmitWorkout.setEnabled(true);
 		}
 
@@ -304,6 +319,10 @@ public class Workout extends SherlockFragment implements LocationListener {
 			Double Traveled = currentWorkoutInfoWNC.UpdateDistTraveled();
 			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
 			currentWorkoutInfoRK.UpdateDistTraveled();
+			if (currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled >= 25.0)
+			{
+				RedeemButton.setVisibility(View.VISIBLE);
+			}
 			lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled));
 			TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled)*1000));
 		}
@@ -333,8 +352,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 		int minutes = (int) (pace - hours * 3600000) / 60000;
 		int seconds = (int) (pace - hours * 3600000 - minutes * 60000) / 1000;
 		lblPace.setText(Integer.toString(hours)+ ":"+Integer.toString(minutes)+ ":"+Integer.toString(seconds));
-		//Toast.makeText(getSherlockActivity(), message, Toast.LENGTH_SHORT)
-				//.show();
 		
 		Drawline(PreviousLocation, latLng, pace);
 		
