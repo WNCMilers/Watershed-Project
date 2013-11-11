@@ -13,6 +13,7 @@ public class WorkoutInfo {
 	 private double CurPace;
 	 private Integer RK_ID;
 	 public double TotalWNCMilesForUser = 0.0;
+	 public boolean isMembershipRedeemed = true;
 	 
 	 public ArrayList<CoordinateInformation> LocationArray = new ArrayList<CoordinateInformation>();
 	    

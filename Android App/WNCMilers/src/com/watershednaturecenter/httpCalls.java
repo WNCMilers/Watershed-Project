@@ -38,10 +38,8 @@ public class httpCalls {
 	
 	public double GetCompletedMileage() throws NumberFormatException, JSONException
 	{
-		InputStream is = getMileageHTTP();
-		JSONObject response = convertResponseToJSON(is);
-		double Dist = Double.parseDouble(response.getString("Distance"));
-		currentWorkout.TotalWNCMilesForUser =  Dist;
+		Mileage_Reemed_object Mileage_Reedeemd = GetCompletedMileage_IsReedemd();
+		double Dist = Mileage_Reedeemd.mileage;
 		return Dist;
 	}
 	
@@ -55,6 +53,7 @@ public class httpCalls {
 		currentWorkout.TotalWNCMilesForUser =  Mileage_Reedeemd.mileage;
     	if (response.getString("Redemption_Date") == "null") Mileage_Reedeemd.isRedeemed = false;
     	else Mileage_Reedeemd.isRedeemed = true;
+    	currentWorkout.isMembershipRedeemed = Mileage_Reedeemd.isRedeemed;
     	return Mileage_Reedeemd;
 	}
 	

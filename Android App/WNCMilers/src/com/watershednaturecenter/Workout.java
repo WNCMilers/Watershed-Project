@@ -98,7 +98,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		lblDist = (TextView) view.findViewById(R.id.lblDist);
 		lblPace = (TextView) view.findViewById(R.id.lblPace);
 		lblTotalWNCMiles = (TextView) view.findViewById(R.id.lblMilesCompleted);
-		if (currentWorkoutInfoWNC.TotalWNCMilesForUser >= 25.0)
+		if (currentWorkoutInfoWNC.TotalWNCMilesForUser >= 25.0 && currentWorkoutInfoWNC.isMembershipRedeemed == false)
 		{
 			RedeemButton.setVisibility(View.VISIBLE);
 		}
@@ -201,15 +201,15 @@ public class Workout extends SherlockFragment implements LocationListener {
 				// quite as many points.
 				
 				//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
-				//locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
+				locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
 				
 				// Push Locations
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
-				try {
-					new PushLocations().execute(1);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
+				//try {
+					//new PushLocations().execute(1);
+				//} catch (Exception e) {
+					//e.printStackTrace();
+				//}
 				Start_StopButton.setText("Stop Workout");
 				SubmitWorkout.setEnabled(false);
 
@@ -319,7 +319,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 			Double Traveled = currentWorkoutInfoWNC.UpdateDistTraveled();
 			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
 			currentWorkoutInfoRK.UpdateDistTraveled();
-			if (currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled >= 25.0)
+			if (currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled >= 25.0  && currentWorkoutInfoWNC.isMembershipRedeemed == false)
 			{
 				RedeemButton.setVisibility(View.VISIBLE);
 			}
