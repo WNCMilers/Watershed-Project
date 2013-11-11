@@ -99,7 +99,6 @@ public class Membership_Signup extends SherlockFragment
 		member.birthdate = ft.format(birthdate.getTime());
 		
 		if (!completeFormValidityCheck()){
-			Toast.makeText(getSherlockActivity(), "Thanks " + member.firstName + " " + member.lastName, Toast.LENGTH_SHORT).show();
 			return true;
 		}
 		

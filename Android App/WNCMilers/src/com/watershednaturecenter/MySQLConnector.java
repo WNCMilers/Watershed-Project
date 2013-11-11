@@ -79,6 +79,8 @@ public class MySQLConnector{
 	
 	class UpdateMiles extends AsyncTask<String,String,String>
 	{
+		String ErrorMsg = null;
+		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -107,10 +109,21 @@ public class MySQLConnector{
 			}
 			catch(Exception e)
 			{
-				Toast.makeText(context,e.toString() ,Toast.LENGTH_LONG).show();
+				ErrorMsg = e.getMessage();
 			}
 			GetMiles();
 			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			
+			if (ErrorMsg != null)
+				Toast.makeText(context,ErrorMsg ,Toast.LENGTH_LONG).show();
+			else
+				Toast.makeText(context, "Workout Submitted", Toast.LENGTH_SHORT).show();
 		}
 		
 	}
@@ -197,6 +210,8 @@ public class MySQLConnector{
 	
 	class RegisterMember extends AsyncTask<MembershipInfo,String,String>
 	{
+		String ErrorMsg = null;
+		MembershipInfo MemberBeingAdded; 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -207,10 +222,12 @@ public class MySQLConnector{
 		protected String doInBackground(MembershipInfo... arg0) {
 			try
 			{
-				
+				MemberBeingAdded = arg0[0];
  				Integer RKlogin = currentWorkout.getRK_ID();
- 				if (RKlogin.toString().isEmpty())
- 					throw new RuntimeException("Run Keeper ID is NULL");
+ 				if (RKlogin == null)
+ 					throw new Exception("Doesn't Look like you are logged in");
+				else if(RKlogin.toString().isEmpty())
+ 					throw new Exception("Doesn't Look like you are logged in");
 				
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("RKID", RKlogin.toString()));
@@ -239,10 +256,21 @@ public class MySQLConnector{
 			}
 			catch(Exception e)
 			{
-				Toast.makeText(context,e.toString() ,Toast.LENGTH_LONG).show();
+				ErrorMsg = e.getMessage(); 
 			}
 			
 			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			
+			if (ErrorMsg != null)
+				Toast.makeText(context,ErrorMsg ,Toast.LENGTH_LONG).show();
+			else
+				Toast.makeText(context, "Thanks " + MemberBeingAdded.firstName + " " + MemberBeingAdded.lastName, Toast.LENGTH_SHORT).show();
 		}
 		
 	}
