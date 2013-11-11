@@ -332,6 +332,12 @@ public class HealthGraphApi {
     
     private class LoginTask extends AsyncTask<String, Integer, Double>{
    	 
+    	ProgressDialog pd;
+    	@Override
+    	protected void onPreExecute() {
+    		 pd = ProgressDialog.show(calledfrom, "", "Please wait...Logging in",true);
+    	};
+    	
     	@Override
     	protected Double doInBackground(String... params) {
     		// TODO Auto-generated method stub
@@ -365,8 +371,9 @@ public class HealthGraphApi {
                 get.addHeader("Authorization", "Bearer " + accessToken);
                 get.addHeader("Accept", "*/*");
                 
-                HttpResponse response = client.execute(get);
                 
+                HttpResponse response = client.execute(get);
+                pd.dismiss();
                 
                 
                 String jsonString = EntityUtils.toString(response.getEntity());
@@ -386,7 +393,7 @@ public class HealthGraphApi {
     	@Override
     	protected void onPostExecute(Double result) {
     		// TODO Auto-generated method stub
-    		
+    		pd.dismiss();
     		this.cancel(true);
     	}
 
