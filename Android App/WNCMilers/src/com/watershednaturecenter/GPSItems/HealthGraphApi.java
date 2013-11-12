@@ -373,7 +373,6 @@ public class HealthGraphApi {
                 
                 
                 HttpResponse response = client.execute(get);
-                pd.dismiss();
                 
                 
                 String jsonString = EntityUtils.toString(response.getEntity());
