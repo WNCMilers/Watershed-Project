@@ -76,98 +76,105 @@ public class Membership_Signup extends SherlockFragment
 	
 	//Function to load data from the textFields/Spinners into local variables
 	public boolean getDataFromForm(){
-		member.designation = designationSpinner.getSelectedItem().toString();
-		member.firstName = firstNameField.getText().toString().trim();
-		member.lastName = lastNameField.getText().toString().trim();
-		member.addressLine1 = addressLine1Field.getText().toString().trim();
-		member.addressLine2 = addressLine2Field.getText().toString().trim();
-		member.city = cityField.getText().toString().trim();
-		member.state = stateSpinner.getSelectedItem().toString();
-		member.zipCode = zipCodeField.getText().toString().trim();
-		member.phoneNumber = phoneNumberField.getText().toString().trim();
-		member.emailAddress = emailAddressField.getText().toString().trim();
-		member.membershipLevel = "Individual";
-		//member.membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
-		
-		GregorianCalendar birthdate = new GregorianCalendar (Integer.parseInt(birthYearField.getText().toString()), 
-				monthSpinner.getSelectedItemPosition(), 
-				Integer.parseInt(birthDayField.getText().toString()));
-		
-		SimpleDateFormat ft =  new SimpleDateFormat ("MM/dd/yyyy");
-		ft.setCalendar(birthdate);
-		
-		member.birthdate = ft.format(birthdate.getTime());
-		
 		if (!completeFormValidityCheck()){
+			
+			member.designation = designationSpinner.getSelectedItem().toString();
+			member.firstName = firstNameField.getText().toString().trim();
+			member.lastName = lastNameField.getText().toString().trim();
+			member.addressLine1 = addressLine1Field.getText().toString().trim();
+			member.addressLine2 = addressLine2Field.getText().toString().trim();
+			member.city = cityField.getText().toString().trim();
+			member.state = stateSpinner.getSelectedItem().toString();
+			member.zipCode = zipCodeField.getText().toString().trim();
+			member.phoneNumber = phoneNumberField.getText().toString().trim();
+			member.emailAddress = emailAddressField.getText().toString().trim();
+			member.membershipLevel = "Individual";
+			//member.membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
+			
+			if(!birthYearField.getText().toString().isEmpty() && !birthDayField.getText().toString().trim().isEmpty()){
+				GregorianCalendar birthdate = new GregorianCalendar (Integer.parseInt(birthYearField.getText().toString()), 
+						monthSpinner.getSelectedItemPosition(), 
+						Integer.parseInt(birthDayField.getText().toString()));
+				
+				SimpleDateFormat ft =  new SimpleDateFormat ("MM/dd/yyyy");
+				ft.setCalendar(birthdate);
+				
+				member.birthdate = ft.format(birthdate.getTime());
+			}
+			
 			return true;
+		}else{
+			return false;
 		}
-		
-		return false;
 	}
 	
 	public boolean completeFormValidityCheck(){
 		boolean errorPresent = false;
 		
-		if (member.firstName.isEmpty()){
+		if (firstNameField.getText().toString().trim().isEmpty()){
 			firstNameField.setError(null);
 			firstNameField.setError("First name cannot be blank");
 			errorPresent = true;
 		}
-		if (member.lastName.isEmpty()){
+		if (lastNameField.getText().toString().trim().isEmpty()){
 			lastNameField.setError(null);
 			lastNameField.setError("Last name cannot be blank");
 			errorPresent = true;
 		}
 		
-		if (member.addressLine1.isEmpty()){
+		if (addressLine1Field.getText().toString().trim().isEmpty()){
 			addressLine1Field.setError(null);
 			addressLine1Field.setError("Address Line 1 cannot be blank");
 			errorPresent = true;
 		}
 		
-		if (member.city.isEmpty()){
+		if (cityField.getText().toString().trim().isEmpty()){
 			cityField.setError(null);
 			cityField.setError("City cannot be blank");
 			errorPresent = true;
 		}
 		else {
-			if(!checkValidity(CITY_REGEX, member.city)){
+			if(!checkValidity(CITY_REGEX, cityField.getText().toString().trim())){
 				cityField.setError(null);
 				cityField.setError("Improper City Name Format");
+				errorPresent = true;
 			}
 		}
 		
-		if (member.zipCode.isEmpty()){
+		if (zipCodeField.getText().toString().trim().isEmpty()){
 			zipCodeField.setError(null);
 			zipCodeField.setError("Zip code cannot be blank");
 			errorPresent = true;
 		} else {
-			if(!checkValidity(ZIP_REGEX, member.zipCode)){
+			if(!checkValidity(ZIP_REGEX, zipCodeField.getText().toString().trim())){
 				zipCodeField.setError(null);
 				zipCodeField.setError("Improper format. Ex: 62025");
+				errorPresent = true;
 			}
 		}
 		
-		if (member.phoneNumber.isEmpty()){
+		if (phoneNumberField.getText().toString().trim().isEmpty()){
 			phoneNumberField.setError(null);
 			phoneNumberField.setError("Phone Number cannot be blank");
 			errorPresent = true;
 		}
 		else {
-			if(!checkValidity(PHONE_REGEX, member.phoneNumber)){
+			if(!checkValidity(PHONE_REGEX, phoneNumberField.getText().toString().trim())){
 				phoneNumberField.setError(null);
 				phoneNumberField.setError("Improper format. Ex: 555-555-5555");
+				errorPresent = true;
 			}
 		}
 		
-		if (member.emailAddress.isEmpty()){
+		if (emailAddressField.getText().toString().trim().isEmpty()){
 			emailAddressField.setError(null);
 			emailAddressField.setError("Email Address cannot be blank");
 			errorPresent = true;
 		} else {
-			if(!checkValidity(EMAIL_REGEX, member.emailAddress)){
+			if(!checkValidity(EMAIL_REGEX, emailAddressField.getText().toString().trim())){
 				emailAddressField.setError(null);
 				emailAddressField.setError("Improper format. Ex: john@domain.com");
+				errorPresent = true;
 			}
 		}
 		

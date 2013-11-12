@@ -33,7 +33,8 @@
 	        android:layout_height="wrap_content"
 	        android:inputType="textCapWords"
 	        android:ems="10"
-	        android:hint="@string/first_Name" >
+	        android:hint="@string/first_Name" 
+	        android:imeOptions="actionNext">
 	        <requestFocus />
 	    </EditText>
 	    
