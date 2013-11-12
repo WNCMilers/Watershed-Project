@@ -1,6 +1,7 @@
 package com.watershednaturecenter;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -46,14 +47,18 @@ public class httpCalls {
 	public Mileage_Reemed_object GetCompletedMileage_IsReedemd() throws NumberFormatException, JSONException
 	{
 		Mileage_Reemed_object Mileage_Reedeemd = new Mileage_Reemed_object();
-		JSONObject response = convertResponseToJSON(getMileageHTTP());
-		getMileageHTTP();
-		//TODO depending on the name of actuall database fields these will need to be changed!!
-		Mileage_Reedeemd.mileage = Double.parseDouble(response.getString("Distance"));
-		currentWorkout.TotalWNCMilesForUser =  Mileage_Reedeemd.mileage;
-    	if (response.getString("Redemption_Date") == "null") Mileage_Reedeemd.isRedeemed = false;
-    	else Mileage_Reedeemd.isRedeemed = true;
-    	currentWorkout.isMembershipRedeemed = Mileage_Reedeemd.isRedeemed;
+		
+		JSONObject response = convertResponseToJSON(getMileageHTTP()); 
+		if (response != null)	
+		{
+			
+			//TODO depending on the name of actuall database fields these will need to be changed!!
+			Mileage_Reedeemd.mileage = Double.parseDouble(response.getString("Distance"));
+			currentWorkout.TotalWNCMilesForUser =  Mileage_Reedeemd.mileage;
+	    	if (response.getString("Redemption_Date") == "null") Mileage_Reedeemd.isRedeemed = false;
+	    	else Mileage_Reedeemd.isRedeemed = true;
+	    	currentWorkout.isMembershipRedeemed = Mileage_Reedeemd.isRedeemed;
+		}
     	return Mileage_Reedeemd;
 	}
 	
@@ -74,6 +79,7 @@ public class httpCalls {
             is = httpEntity.getContent();
 		}
 		catch(Exception e){
+			e.getMessage();
 		}
 		return is;
 		
