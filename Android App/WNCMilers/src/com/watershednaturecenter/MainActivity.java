@@ -68,14 +68,14 @@ public class MainActivity extends SherlockFragmentActivity
 //					bar.newTab()
 //							.setText("Photos"),
 //					Photos.class, null);
-			mTabsAdapter.addTab(
-					bar.newTab()
-							.setText("Events"),
-					Events.class, null);
-			mTabsAdapter.addTab(
-					bar.newTab()
-							.setText("Become a Member"),
-					Membership_Signup.class, null);
+			//mTabsAdapter.addTab(
+					//bar.newTab()
+							//.setText("Events"),
+					//Events.class, null);
+			//mTabsAdapter.addTab(
+					//bar.newTab()
+							//.setText("Become a Member"),
+							//Membership_Signup_TAB.class, null);
 			mTabsAdapter.addTab(
 					bar.newTab()
 							.setText("Feedback"),

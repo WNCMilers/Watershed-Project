@@ -1,8 +1,8 @@
 package com.watershednaturecenter.Dialogs;
 
 import com.watershednaturecenter.Login;
+import com.watershednaturecenter.Membership_Signup_TAB;
 import com.watershednaturecenter.Membership_Signup;
-import com.watershednaturecenter.Membership_Signup2;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -42,7 +42,7 @@ public class WNCMileageDialog extends DialogFragment{
             .setPositiveButton("Redeem Now", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                 	dialog.dismiss();
-                	Intent i = new Intent(getActivity(), Membership_Signup2.class);
+                	Intent i = new Intent(getActivity(), Membership_Signup.class);
                 	i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
               	   	startActivity(i);
                 }

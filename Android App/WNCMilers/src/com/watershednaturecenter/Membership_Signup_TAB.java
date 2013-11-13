@@ -5,9 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +17,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public class Membership_Signup extends Activity
+public class Membership_Signup_TAB extends SherlockFragment
 {
 	// Regular Expression
     private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -38,44 +35,43 @@ public class Membership_Signup extends Activity
 	private Spinner designationSpinner, stateSpinner, monthSpinner;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-		setContentView(R.layout.membership_sign_up);
-        
-		designationSpinner = (Spinner) findViewById(R.id.DesignationSelection);
-		firstNameField = (EditText) findViewById(R.id.firstName);
-		lastNameField = (EditText) findViewById(R.id.lastName);
-		addressLine1Field = (EditText) findViewById(R.id.addressLine1);
-		addressLine2Field = (EditText) findViewById(R.id.addressLine2);
-		cityField = (EditText) findViewById(R.id.CityTextBox);
-		stateSpinner = (Spinner) findViewById(R.id.StateSelection);
-		zipCodeField = (EditText) findViewById(R.id.zipCode);
-		phoneNumberField = (EditText) findViewById(R.id.PhoneNumber);
-		emailAddressField = (EditText) findViewById(R.id.EmailAddress);
-		monthSpinner = (Spinner) findViewById(R.id.BirthMonthSpinner);
-		birthDayField = (EditText) findViewById(R.id.DayEditText);
-		birthYearField = (EditText) findViewById(R.id.YearEditText);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState)
+	{
+		View view = inflater.inflate(R.layout.membership_sign_up, container, false);
+		
+		designationSpinner = (Spinner) view.findViewById(R.id.DesignationSelection);
+		firstNameField = (EditText) view.findViewById(R.id.firstName);
+		lastNameField = (EditText) view.findViewById(R.id.lastName);
+		addressLine1Field = (EditText) view.findViewById(R.id.addressLine1);
+		addressLine2Field = (EditText) view.findViewById(R.id.addressLine2);
+		cityField = (EditText) view.findViewById(R.id.CityTextBox);
+		stateSpinner = (Spinner) view.findViewById(R.id.StateSelection);
+		zipCodeField = (EditText) view.findViewById(R.id.zipCode);
+		phoneNumberField = (EditText) view.findViewById(R.id.PhoneNumber);
+		emailAddressField = (EditText) view.findViewById(R.id.EmailAddress);
+		monthSpinner = (Spinner) view.findViewById(R.id.BirthMonthSpinner);
+		birthDayField = (EditText) view.findViewById(R.id.DayEditText);
+		birthYearField = (EditText) view.findViewById(R.id.YearEditText);
 		//membershipLevelSpinner = (Spinner) view.findViewById(R.id.MembershipLevelSelection);
 				
 		stateSpinner.setSelection(13);
 		
-		submitButton = (Button) findViewById(R.id.submitButton);
+		submitButton = (Button) view.findViewById(R.id.submitButton);
 		submitButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
             	//Hides softKeyboard
-            	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
             		
               	//Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
             	if (getDataFromForm()){
-            	    MySQLConnector MYSQLCOMM = new MySQLConnector();
+            	    MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
 	            	MYSQLCOMM.RegisterMember(member);
-	            	Intent workoutIntent = new Intent(Membership_Signup.this, MainActivity.class);
-	    			workoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    			Membership_Signup.this.startActivity(workoutIntent);
             	}
         	}
         });
+		return view;
 	}
 	
 	//Function to load data from the textFields/Spinners into local variables
@@ -183,7 +179,7 @@ public class Membership_Signup extends Activity
 		}
 		
 		if (errorPresent){
-			Toast.makeText(this, "Please correct error on form", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getSherlockActivity(), "Please correct error on form", Toast.LENGTH_SHORT).show();
 		}
 		return errorPresent;
 	}
