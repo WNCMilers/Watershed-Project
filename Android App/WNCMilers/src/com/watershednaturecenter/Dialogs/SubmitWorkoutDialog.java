@@ -77,8 +77,12 @@ public class SubmitWorkoutDialog extends DialogFragment {
 		 currentWorkoutInfoRK.SetEquipmentUsed("None");
 		 currentWorkoutInfoRK.SetWorkoutNotes(WorkoutNotes.getText().toString());
 	 	 APIWORKER.PostWorkout(currentWorkoutInfoRK.LocationArray,currentWorkoutInfoRK);
-		 MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
-		 MYSQLCOMM.UpdateMiles();
+	 	 if (currentWorkoutInfoWNC.GetCurDistTraveled() > 0.00)
+	 	 {
+	 		 //only submit to WNC if they actually traveled recordable distance within WNC
+	 		 MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
+	 	     MYSQLCOMM.UpdateMiles();
+	 	 }
 		 SubmitBtn.setEnabled(false);
 		 //TODO: Add Check to see if any distance was done inside WNC if so, submit to database.
 		 dismiss();

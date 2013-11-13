@@ -19,6 +19,7 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.InputFilter.LengthFilter;
 import android.text.format.Time;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -131,7 +132,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		
 		RedeemButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), Membership_Signup2.class);
+				Intent i = new Intent(getActivity(), Membership_Signup.class);
             	i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
           	   	startActivity(i);
 			}
@@ -201,15 +202,15 @@ public class Workout extends SherlockFragment implements LocationListener {
 				// quite as many points.
 				
 				//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
-				locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
+				//locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
 				
 				// Push Locations
-				//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
-				//try {
-					//new PushLocations().execute(1);
-				//} catch (Exception e) {
-					//e.printStackTrace();
-				//}
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
+				try {
+					new PushLocations().execute(1);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				Start_StopButton.setText("Stop Workout");
 				SubmitWorkout.setEnabled(false);
 
@@ -314,6 +315,15 @@ public class Workout extends SherlockFragment implements LocationListener {
 		//Check to see if user is in WNC
 		if (WNCboundaries.contains(CurrentLocation.GetLatitude(), CurrentLocation.GetLongitude()))
 		{
+			if (currentWorkoutInfoWNC.JustLeftWatershed == true)
+			{
+				//if user leaves water shed and reenters
+				//adds current location to array twice so that distance is not calcualted from last point in watershed.
+				//prevents user from entering watershed, driving to other side, multiple times to get 25 miles.
+				currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
+				currentWorkoutInfoWNC.JustLeftWatershed = false;
+			}
+			
 			//add to both Run keeper location array, and WNCMilers Location Array
 			currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
 			Double Traveled = currentWorkoutInfoWNC.UpdateDistTraveled();
@@ -328,6 +338,10 @@ public class Workout extends SherlockFragment implements LocationListener {
 		}
 		else//Just add into Run Keeper Location Array
 		{
+			if(currentWorkoutInfoWNC.LocationArray.size() > 0)
+			{
+				currentWorkoutInfoWNC.JustLeftWatershed = true;
+			}
 			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
 			currentWorkoutInfoRK.UpdateDistTraveled();
 		}
@@ -406,6 +420,70 @@ public class Workout extends SherlockFragment implements LocationListener {
 		public void PushLocations() {
 			mock = new MockLocationProvider(LocationManager.GPS_PROVIDER,
 					getActivity());
+			mock.pushLocation(38.815912000, -89.977662000);sleep();
+			mock.pushLocation(38.815915000, -89.977555000);sleep();
+			mock.pushLocation(38.815922000, -89.977462000);sleep();
+			mock.pushLocation(38.815915000, -89.977363000);sleep();
+			mock.pushLocation(38.815914000, -89.977260000);sleep();
+			mock.pushLocation(38.815907000, -89.977154000);sleep();
+			mock.pushLocation(38.815903000, -89.977060000);sleep();
+			mock.pushLocation(38.815901000, -89.976947000);sleep();
+			mock.pushLocation(38.815894000, -89.976855000);sleep();
+			mock.pushLocation(38.815891000, -89.976741000);sleep();
+			mock.pushLocation(38.815887000, -89.976644000);sleep();
+			mock.pushLocation(38.815884000, -89.976523000);sleep();
+			mock.pushLocation(38.815875000, -89.976392000);sleep();
+			mock.pushLocation(38.815885000, -89.976312000);sleep();
+			mock.pushLocation(38.815929000, -89.976240000);sleep();
+			mock.pushLocation(38.815977000, -89.976173000);sleep();
+			mock.pushLocation(38.816008000, -89.976078000);sleep();
+			mock.pushLocation(38.816059000, -89.976002000);sleep();
+			mock.pushLocation(38.816108000, -89.975915000);sleep();
+			mock.pushLocation(38.816165000, -89.975848000);sleep();
+			mock.pushLocation(38.816248000, -89.975813000);sleep();
+			mock.pushLocation(38.816320000, -89.975779000);sleep();
+			mock.pushLocation(38.816392000, -89.975743000);sleep();
+			mock.pushLocation(38.816483000, -89.975734000);sleep();
+			mock.pushLocation(38.816593000, -89.975726000);sleep();
+			mock.pushLocation(38.816676000, -89.975715000);sleep();
+			mock.pushLocation(38.816764000, -89.975683000);sleep();
+			mock.pushLocation(38.816861000, -89.975654000);sleep();
+			mock.pushLocation(38.816958000, -89.975633000);sleep();
+			mock.pushLocation(38.817055000, -89.975633000);sleep();
+			mock.pushLocation(38.817133000, -89.975629000);sleep();
+			mock.pushLocation(38.817233000, -89.975629000);sleep();
+			mock.pushLocation(38.817322000, -89.975624000);sleep();
+			mock.pushLocation(38.817245000, -89.975473000);sleep();
+			mock.pushLocation(38.817161000, -89.975398000);sleep();
+			mock.pushLocation(38.817053000, -89.975227000);sleep();
+			mock.pushLocation(38.816998000, -89.975071000);sleep();
+			mock.pushLocation(38.817090000, -89.974905000);sleep();
+			mock.pushLocation(38.817138000, -89.974738000);sleep();
+			mock.pushLocation(38.816973000, -89.974341000);sleep();
+			mock.pushLocation(38.817170000, -89.973960000);sleep();
+			mock.pushLocation(38.817430000, -89.973630000);sleep();
+			mock.pushLocation(38.817617000, -89.973365000);sleep();
+			mock.pushLocation(38.817900000, -89.973000000);sleep();
+			mock.pushLocation(38.818169000, -89.972705000);sleep();
+			mock.pushLocation(38.817980000, -89.973110000);sleep();
+			mock.pushLocation(38.817680000, -89.973505000);sleep();
+			mock.pushLocation(38.817510000, -89.973730000);sleep();
+			mock.pushLocation(38.817270000, -89.974040000);sleep();
+			mock.pushLocation(38.817036000, -89.974341000);sleep();
+			mock.pushLocation(38.817170000, -89.974690000);sleep();
+			mock.pushLocation(38.817134000, -89.974902000);sleep();
+			mock.pushLocation(38.817038000, -89.975076000);sleep();
+			mock.pushLocation(38.817082000, -89.975194000);sleep();
+			mock.pushLocation(38.817184000, -89.975347000);sleep();
+			mock.pushLocation(38.817282000, -89.975441000);sleep();
+			mock.pushLocation(38.817356000, -89.975616000);sleep();
+			mock.pushLocation(38.817424000, -89.975607000);sleep();
+			mock.pushLocation(38.817491000, -89.975598000);sleep();
+			mock.pushLocation(38.817564000, -89.975599000);sleep();
+			mock.pushLocation(38.817649000, -89.975595000);sleep();
+			mock.pushLocation(38.817739000, -89.975601000);sleep();
+			mock.pushLocation(38.817781000, -89.975607000);sleep();
+			/*
 			// MOCK LOCATION
 			sleep();
 			mock.pushLocation(38.815899,-89.978631);
@@ -446,12 +524,12 @@ public class Workout extends SherlockFragment implements LocationListener {
 			sleep();
 			mock.pushLocation(38.816609,-89.980954);
 			sleep();
-			mock.pushLocation(38.815991,-89.979849);
+			mock.pushLocation(38.815991,-89.979849);*/
 		}
 
 		public void sleep() {
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -14,6 +14,7 @@ public class WorkoutInfo {
 	 private Integer RK_ID;
 	 public double TotalWNCMilesForUser = 0.0;
 	 public boolean isMembershipRedeemed = true;
+	 public boolean JustLeftWatershed = false;
 	 
 	 public ArrayList<CoordinateInformation> LocationArray = new ArrayList<CoordinateInformation>();
 	    
