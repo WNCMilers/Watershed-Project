@@ -92,7 +92,7 @@ public class Membership_Signup extends Activity
 			member.zipCode = zipCodeField.getText().toString().trim();
 			member.phoneNumber = phoneNumberField.getText().toString().trim();
 			member.emailAddress = emailAddressField.getText().toString().trim();
-			member.membershipLevel = "Individual";
+			member.membershipLevel = "WNC Miler";
 			//member.membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
 			
 			if(!birthYearField.getText().toString().isEmpty() && !birthDayField.getText().toString().trim().isEmpty()){
