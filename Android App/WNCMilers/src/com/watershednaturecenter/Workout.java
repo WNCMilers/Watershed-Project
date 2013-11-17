@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.app.AlertDialog;
+import android.app.Notification.Builder;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +18,7 @@ import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -55,6 +58,7 @@ import com.watershednaturecenter.GPSItems.Polygon;
 import com.watershednaturecenter.GPSItems.WorkoutInfo;
 
 public class Workout extends SherlockFragment implements LocationListener {
+	private static final int GPS_ENABLE = 1;
 	private Button Start_StopButton;
 	private Button SubmitWorkout;
 	private Button RedeemButton;
@@ -174,11 +178,77 @@ public class Workout extends SherlockFragment implements LocationListener {
 		else return null;
 	}
 
+	public void checkGpsEnabled(){
+		LocationManager gpsService = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+		boolean enabled = gpsService.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+		// check if enabled and if not prompt user to enable GPS		   
+		if (!enabled) {
+			showEnablePrompt();
+		} 
+		else{
+			runKeeperPrompt();
+		}
+	}
+	
+	public void showEnablePrompt(){
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+		
+		// Setting Dialog Title
+        alertDialog.setTitle("GPS disabled");
+        
+		// Setting Dialog Message
+        alertDialog.setMessage("WNC Milers needs access to your location. Please enable GPS.");
+        
+        // On pressing Enable button
+        alertDialog.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                intent.putExtra("gpsEnableRequest", true);
+                getActivity().setIntent(intent);
+                getActivity().startActivity(intent);   
+
+                dialog.dismiss();
+            }
+        });
+        
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
+            
+            Toast.makeText(getSherlockActivity(), "GPS is required for use of WNC Milers Application", Toast.LENGTH_LONG).show();
+            }
+        });
+        
+        // Showing Alert Message
+        alertDialog.show();	
+	}
+	
+	@Override
+	public void  onResume() {		
+		super.onResume();
+		
+		boolean gpsEnableRequest = this.getActivity().getIntent().getBooleanExtra("gpsEnableRequest", false);
+		
+		if(gpsEnableRequest){
+	    	LocationManager gpsService = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+			boolean enabled = gpsService.isProviderEnabled(LocationManager.GPS_PROVIDER);
+			
+			if(enabled){
+				runKeeperPrompt();
+			}else{
+				Toast.makeText(getSherlockActivity(), "GPS is required for use of WNC Milers Application", Toast.LENGTH_LONG).show();
+			}
+		}
+	}
 	
 	public void onClickStart_StopTrackingBtn() {
-
-		
-		if (Start_StopButton.getText().equals("New Workout")) {
+		checkGpsEnabled();
+	}
+	
+	public void runKeeperPrompt(){
+		if (Start_StopButton.getText().equals("New Workout")){
 			if (!LoginStatus())
 			{
 				DisplayLoginPopup();
@@ -227,9 +297,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 			Start_StopButton.setText("New Workout");
 			SubmitWorkout.setEnabled(true);
 		}
-
+		
 	}
-	
 	
 	public void DisplayLoginPopup()
 	{
