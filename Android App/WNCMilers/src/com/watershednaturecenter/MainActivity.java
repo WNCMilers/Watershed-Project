@@ -76,10 +76,10 @@ public class MainActivity extends SherlockFragmentActivity
 					//bar.newTab()
 							//.setText("Become a Member"),
 							//Membership_Signup_TAB.class, null);
-			mTabsAdapter.addTab(
-					bar.newTab()
-							.setText("Feedback"),
-					Feedback.class, null);
+//			mTabsAdapter.addTab(
+//					bar.newTab()
+//							.setText("Feedback"),
+//					Feedback.class, null);
 				}
 	}
 	
@@ -137,8 +137,8 @@ public class MainActivity extends SherlockFragmentActivity
 	    switch (item.getItemId()) {
 	    case R.id.login:
 	    	//setContentView(R.layout.login);
-	    	Intent i = new Intent(this, Login.class);
-	    	startActivity(i);
+	    	Intent login = new Intent(this, Login.class);
+	    	startActivity(login);
 	    	break;
 	    case R.id.LRK:
 	    	if (IsAppInstalled("com.fitnesskeeper.runkeeper.pro"))
@@ -154,11 +154,13 @@ public class MainActivity extends SherlockFragmentActivity
 	    		RKInstallDialog RkDialog = new RKInstallDialog();
 	    		RkDialog.show(getSupportFragmentManager(), "RKInstallDialogNotice");
 	    	}
-	    	
-	    	
-	    	
-	    	
-	}
+	    	break;  
+	    case R.id.application_feedback:
+	    	Intent feedback = new Intent(this, Feedback.class);
+	    	//feedback.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      	   	startActivity(feedback);
+      	   	break;
+	    }
 	    return true;
 	}
 	

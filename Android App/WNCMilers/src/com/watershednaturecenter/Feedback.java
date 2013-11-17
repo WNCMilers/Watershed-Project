@@ -2,15 +2,14 @@ package com.watershednaturecenter;
 
 import java.io.File;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,9 +17,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-public class Feedback extends SherlockFragment{
+public class Feedback extends Activity{
 
 	private String yourName, yourEmail, yourFeedbackType, yourFeedback, imageFilePath;
 	private EditText nameField, emailAddressField, feedbackMessageField, attachmentPath;
@@ -31,18 +28,17 @@ public class Feedback extends SherlockFragment{
 	private static int SEND_EMAIL = 2;
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState)
-	{
-		View view = inflater.inflate(R.layout.feedback, container, false);
+	protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+		setContentView(R.layout.feedback);
 		
-		nameField = (EditText) view.findViewById(R.id.yourNameFeedback);
-		emailAddressField = (EditText) view.findViewById(R.id.yourEmailFeedback);
-		feedbackTypeSpinner = (Spinner) view.findViewById(R.id.feedbackType);
-		feedbackMessageField = (EditText) view.findViewById(R.id.feedbackDetails);
-		attachImageButton = (ImageButton) view.findViewById(R.id.attachImageButton1);
-		feedbackSubmitButton = (Button) view.findViewById(R.id.feedbackSubmitButton);
-		attachmentPath = (EditText) view.findViewById(R.id.imageAttachmentPath);
+		nameField = (EditText) findViewById(R.id.yourNameFeedback);
+		emailAddressField = (EditText) findViewById(R.id.yourEmailFeedback);
+		feedbackTypeSpinner = (Spinner) findViewById(R.id.feedbackType);
+		feedbackMessageField = (EditText) findViewById(R.id.feedbackDetails);
+		attachImageButton = (ImageButton) findViewById(R.id.attachImageButton1);
+		feedbackSubmitButton = (Button) findViewById(R.id.feedbackSubmitButton);
+		attachmentPath = (EditText) findViewById(R.id.imageAttachmentPath);
 		
 		attachImageButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -58,7 +54,7 @@ public class Feedback extends SherlockFragment{
             	String feedbackDestinationEmailList[] = {"wncdevelopers@gmail.com"};  
                 
             	//Hides softKeyboard
-            	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(feedbackSubmitButton.getWindowToken(), 0);
             		
                 getDataFromForm();
@@ -75,16 +71,12 @@ public class Feedback extends SherlockFragment{
                 	startActivityForResult(Intent.createChooser(emailIntent, "Send your email using:"), SEND_EMAIL);  
                 }
                 catch (Exception e){
-                	Toast.makeText(getSherlockActivity(), "No Email Clients Installed", Toast.LENGTH_SHORT).show();
+                	Toast.makeText(Feedback.this, "No Email Clients Installed", Toast.LENGTH_SHORT).show();
                 }
                 
               	//Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
-		
-		
-		
-		return view;
 	}
 	
 	//Function to load data from the textFields/Spinners into local variables
@@ -102,7 +94,7 @@ public class Feedback extends SherlockFragment{
 
 	        if (_uri != null) {
 		        //User had pick an image.
-		        Cursor cursor = getActivity().getContentResolver().query(_uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
+		        Cursor cursor = getContentResolver().query(_uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
 		        cursor.moveToFirst();
 	
 		        //Link to the image
@@ -118,7 +110,7 @@ public class Feedback extends SherlockFragment{
 			imageFilePath = null;
 			attachmentPath.setHint("Attach Screenshot");
 			feedbackTypeSpinner.setSelection(0);
-			Toast.makeText(getSherlockActivity(), "Thank you for your feedback!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Thank you for your feedback!", Toast.LENGTH_SHORT).show();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
