@@ -13,5 +13,6 @@
      <item android:id="@+id/help" android:title="@string/App_help" android:orderInCategory="102" android:showAsAction="never"></item>
      <item android:id="@+id/LRK" android:title="@string/RKLaunchtxt" android:orderInCategory="103" android:showAsAction="never"></item>
      <item android:id="@+id/login" android:title="@string/runkeeperlogin" android:orderInCategory="104" android:showAsAction="never"></item>
+     <item android:id="@+id/events" android:title="@string/upcoming_events" android:orderInCategory="105" android:showAsAction="never"></item>
 
 </menu>

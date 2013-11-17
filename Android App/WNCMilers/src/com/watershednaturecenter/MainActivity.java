@@ -157,9 +157,15 @@ public class MainActivity extends SherlockFragmentActivity
 	    	break;  
 	    case R.id.application_feedback:
 	    	Intent feedback = new Intent(this, Feedback.class);
-	    	//feedback.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
       	   	startActivity(feedback);
       	   	break;
+	    case R.id.about:
+	    	Intent about = new Intent(this, About.class);
+      	   	startActivity(about);
+	    	break;
+	    case R.id.events:
+	    	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://watershednaturecenter.com/events.php"));
+			startActivity(browserIntent);
 	    }
 	    return true;
 	}
