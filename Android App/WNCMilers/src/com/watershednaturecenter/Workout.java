@@ -179,19 +179,29 @@ public class Workout extends SherlockFragment implements LocationListener {
 	}
 
 	public void checkGpsEnabled(){
-		LocationManager gpsService = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-		boolean enabled = gpsService.isProviderEnabled(LocationManager.GPS_PROVIDER);
+		 String locationProviders = Settings.System.getString(getActivity().getContentResolver(),
+				   Settings.System.LOCATION_PROVIDERS_ALLOWED);
 
 		// check if enabled and if not prompt user to enable GPS		   
-		if (!enabled) {
-			showEnablePrompt();
+		if (!locationProviders.contains(LocationManager.GPS_PROVIDER)) {
+			showEnableGpsPrompt();
 		} 
 		else{
 			runKeeperPrompt();
 		}
 	}
 	
-	public void showEnablePrompt(){
+	//source: http://stackoverflow.com/questions/6880232/disable-check-for-mock-location-prevent-gps-spoofing
+	public static boolean isMockSettingsON(Context context) {
+	  // returns true if mock location enabled, false if not enabled.
+	  if (Settings.Secure.getString(context.getContentResolver(),
+	                                Settings.Secure.ALLOW_MOCK_LOCATION).equals("0"))
+	     return false;
+	  else
+	     return true;
+	}
+	
+	public void showEnableGpsPrompt(){
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 		
 		// Setting Dialog Title
@@ -207,6 +217,7 @@ public class Workout extends SherlockFragment implements LocationListener {
                 intent.putExtra("gpsEnableRequest", true);
                 getActivity().setIntent(intent);
                 getActivity().startActivity(intent);   
+                //getActivity().finish();
 
                 dialog.dismiss();
             }
@@ -225,26 +236,79 @@ public class Workout extends SherlockFragment implements LocationListener {
         alertDialog.show();	
 	}
 	
+	public void showDisableMockPrompt(){
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+		
+		// Setting Dialog Title
+        alertDialog.setTitle("Mock locations enabled");
+        
+		// Setting Dialog Message
+        alertDialog.setMessage("WNC Milers does not permit use of mock locations. Please disable Mock Locations.");
+        
+        // On pressing Enable button
+        alertDialog.setPositiveButton("Disable", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
+                intent.putExtra("mockDisableRequest", true);
+                getActivity().setIntent(intent);
+                getActivity().startActivity(intent);   
+               // getActivity().finish();
+
+                dialog.dismiss();
+            }
+        });
+        
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
+            
+            Toast.makeText(getSherlockActivity(), "Mock locations must be disabled for use of WNC Milers Application", Toast.LENGTH_LONG).show();
+            }
+        });
+        
+        // Showing Alert Message
+        alertDialog.show();	
+	}
+	
 	@Override
 	public void  onResume() {		
 		super.onResume();
 		
 		boolean gpsEnableRequest = this.getActivity().getIntent().getBooleanExtra("gpsEnableRequest", false);
+		boolean mockDisableRequest = this.getActivity().getIntent().getBooleanExtra("mockDisableRequest", false);
 		
 		if(gpsEnableRequest){
-	    	LocationManager gpsService = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-			boolean enabled = gpsService.isProviderEnabled(LocationManager.GPS_PROVIDER);
+			 String locationProviders = Settings.System.getString(getActivity().getContentResolver(),
+					   Settings.System.LOCATION_PROVIDERS_ALLOWED);
 			
-			if(enabled){
+			if(locationProviders.contains(LocationManager.GPS_PROVIDER)){
 				runKeeperPrompt();
 			}else{
 				Toast.makeText(getSherlockActivity(), "GPS is required for use of WNC Milers Application", Toast.LENGTH_LONG).show();
 			}
 		}
+		
+		if(mockDisableRequest){
+	    	if (Settings.Secure.getString(getActivity().getContentResolver(),
+                    Settings.Secure.ALLOW_MOCK_LOCATION).equals("1")){
+	    		Toast.makeText(getSherlockActivity(), "Mock locations must be disabled for use of WNC Milers Application", Toast.LENGTH_LONG).show();
+	    	}
+	    	else{
+	    		checkGpsEnabled();
+	    	}
+		}
 	}
 	
 	public void onClickStart_StopTrackingBtn() {
 		checkGpsEnabled();
+		
+		//TODO: enable this block of code to prevent cheaters and delete checkGpsEnabled above.
+//		if(isMockSettingsON(getActivity())){
+//			showDisableMockPrompt();
+//		}else{
+//			checkGpsEnabled();
+//		}
 	}
 	
 	public void runKeeperPrompt(){
