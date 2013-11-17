@@ -2,6 +2,7 @@ package com.watershednaturecenter;
 
 import java.util.ArrayList;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,15 +33,34 @@ public class MainActivity extends SherlockFragmentActivity
 	TabsAdapter mTabsAdapter;
 	TextView tabCenter;
 	TextView tabText;
+	
+	private static void setDefaultUncaughtExceptionHandler() {
+	    try {
+	        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
+	            @Override
+	            public void uncaughtException(Thread t, Throwable e) {
+	            	Log.e("log_tag", "Uncaught Exception detected in thread"+e.toString());
+	                //Log.e("Uncaught Exception detected in thread {}", t, e);
+	            }
+	        });
+	    } catch (SecurityException e) {
+	    	Log.e("log_tag", "Could not set the Default Uncaught Exception Handler"+e.toString());
+	        //logger.error("Could not set the Default Uncaught Exception Handler", e);
+	    }
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		if(checkPlayServices()){
+		super.onCreate(savedInstanceState);
+		
+		setDefaultUncaughtExceptionHandler();
+		boolean check = checkPlayServices();
+		if(check){
 			getSupportActionBar().setDisplayShowTitleEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
-			super.onCreate(savedInstanceState);
-	
+				
 			mViewPager = new ViewPager(this);
 			mViewPager.setId(R.id.pager);
 	
@@ -86,17 +107,17 @@ public class MainActivity extends SherlockFragmentActivity
 	static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 	 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	  switch (requestCode) {
-	    case REQUEST_CODE_RECOVER_PLAY_SERVICES:
-	      if (resultCode == RESULT_CANCELED) {
-	        Toast.makeText(this, "Google Play Services must be installed.",
-	            Toast.LENGTH_SHORT).show();
-	        finish();
-	      }
-	      return;
-	  }
-	  super.onActivityResult(requestCode, resultCode, data);
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {	 
+		switch (requestCode) {
+		case REQUEST_CODE_RECOVER_PLAY_SERVICES:
+			if (resultCode == RESULT_CANCELED) {
+		        Toast.makeText(this, "Google Play Services must be installed.",
+		            Toast.LENGTH_SHORT).show();
+		        finish();
+			}
+		    return;
+		  }
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	private boolean checkPlayServices() {
@@ -106,22 +127,24 @@ public class MainActivity extends SherlockFragmentActivity
     	   status == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED ||
     	   status == ConnectionResult.SERVICE_DISABLED){
     		showErrorDialog(status);
-	    } else {
+    	} else {
 	      Toast.makeText(this, "This device is not supported.",
 	          Toast.LENGTH_LONG).show();
 	      finish();
 	    }
-	    //return false;
-	    
-	    //allow for run on emulator
-	    return true;
+    	return false;
+    	
+    	//allow for run on emulator
+	    //return true;
+	  }else{
+		  return true;
 	  }
-	  return true;
 	}
 	 
 	void showErrorDialog(int code) {
-		//thinking that this will not work on an emulated device. need to research to find out.
-	    GooglePlayServicesUtil.getErrorDialog(code, this, REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
+	   Dialog googlePlay = GooglePlayServicesUtil.getErrorDialog(code, this, REQUEST_CODE_RECOVER_PLAY_SERVICES);
+	   googlePlay.setCancelable(false);
+	   googlePlay.show();
 	}
 	
 	@Override
