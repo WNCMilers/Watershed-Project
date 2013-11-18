@@ -2,12 +2,15 @@ package com.watershednaturecenter;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
@@ -152,6 +155,37 @@ public class MainActivity extends SherlockFragmentActivity
 	    MenuInflater inflater = getSupportMenuInflater();
 	    inflater.inflate(R.menu.main, menu);
 	    return true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		//if (){
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+			
+			// Setting Dialog Title
+	        alertDialog.setTitle("Exit Confirmation");
+	        
+			// Setting Dialog Message
+	        alertDialog.setMessage("Warning exiting app with cancel current workout. Continue?");
+	        
+	        // On pressing Enable button
+	        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog,int which) {
+	               dialog.dismiss();
+	               MainActivity.this.finish();
+	            }
+	        });
+	        
+	        // on pressing cancel button
+	        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	            dialog.cancel();
+	            }
+	        });
+	        
+	        // Showing Alert Message
+	        alertDialog.show();	
+		//}
 	}
 	
 	@Override
