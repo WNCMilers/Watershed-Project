@@ -159,33 +159,31 @@ public class MainActivity extends SherlockFragmentActivity
 	
 	@Override
 	public void onBackPressed() {
-		//if (){
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-			
-			// Setting Dialog Title
-	        alertDialog.setTitle("Exit Confirmation");
-	        
-			// Setting Dialog Message
-	        alertDialog.setMessage("Warning exiting app with cancel current workout. Continue?");
-	        
-	        // On pressing Enable button
-	        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog,int which) {
-	               dialog.dismiss();
-	               MainActivity.this.finish();
-	            }
-	        });
-	        
-	        // on pressing cancel button
-	        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int which) {
-	            dialog.cancel();
-	            }
-	        });
-	        
-	        // Showing Alert Message
-	        alertDialog.show();	
-		//}
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		
+		// Setting Dialog Title
+        alertDialog.setTitle("Exit Confirmation");
+        
+		// Setting Dialog Message
+        alertDialog.setMessage("Warning exiting app will cancel any active workout. Continue?");
+        
+        // On pressing Enable button
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+               dialog.dismiss();
+               MainActivity.this.finish();
+            }
+        });
+        
+        // on pressing cancel button
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
+            }
+        });
+        
+        // Showing Alert Message
+        alertDialog.show();	
 	}
 	
 	@Override
