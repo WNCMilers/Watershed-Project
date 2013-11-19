@@ -82,14 +82,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private GoogleMap map;
 	
 	@Override
-	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
-		if (getResources().getConfiguration().orientation == newConfig.ORIENTATION_PORTRAIT)
-			map.animateCamera(CameraUpdateFactory.zoomTo(16));
-		else
-			map.animateCamera(CameraUpdateFactory.zoomTo(17));
-	};
-	
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		currentWorkoutInfoWNC = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutWNC();
