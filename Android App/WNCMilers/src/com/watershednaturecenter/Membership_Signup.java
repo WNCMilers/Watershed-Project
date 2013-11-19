@@ -103,7 +103,7 @@ public class Membership_Signup extends Activity
 				SimpleDateFormat ft =  new SimpleDateFormat ("MM/dd/yyyy");
 				ft.setCalendar(birthdate);
 				
-				member.birthdate = ft.format(birthdate.getTime());
+				member.birthdate = ft.format(birthdate.getTime()).toString();
 			}
 			
 			return true;

@@ -63,6 +63,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private Button SubmitWorkout;
 	private Button RedeemButton;
 	private Chronometer WorkoutTimer;
+	private long stoppedTime;
 	private ProgressDialog progress;
 	private TextView lblDist;
 	private TextView lblPace;
@@ -345,7 +346,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				Start_StopButton.setText("Stop Workout");
+				Start_StopButton.setText("Pause Workout");
 				SubmitWorkout.setEnabled(false);
 
 				progress = new ProgressDialog(getActivity());
@@ -355,11 +356,20 @@ public class Workout extends SherlockFragment implements LocationListener {
 			}
 			
 			
-		} else {
+		}
+		else if (Start_StopButton.getText().equals("Pause Workout")){
 			WorkoutTimer.stop();
-			locationManager.removeUpdates(this);
-			Start_StopButton.setText("New Workout");
+			stoppedTime = WorkoutTimer.getBase() - SystemClock.elapsedRealtime();
+			//locationManager.removeUpdates(this);
+			Start_StopButton.setText("Resume Workout");
 			SubmitWorkout.setEnabled(true);
+		}
+		else {
+			WorkoutTimer.start();
+			WorkoutTimer.setBase(SystemClock.elapsedRealtime() + stoppedTime);
+//			//locationManager.removeUpdates(this);
+			Start_StopButton.setText("Pause Workout");
+			SubmitWorkout.setEnabled(false);
 		}
 		
 	}
@@ -403,7 +413,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// Posts the workout for the coordinates gathered between start and
 			// stop
 			//
-		
+			currentWorkoutInfoWNC.wasWorkoutPaused = false;
+			Start_StopButton.setText("New Workout");
 			SubmitWorkoutDialog SD = new SubmitWorkoutDialog(this.getSherlockActivity());
 			SD.setTargetFragment(this, 0);
 			FragmentManager FM = getSherlockActivity().getSupportFragmentManager();
@@ -412,96 +423,107 @@ public class Workout extends SherlockFragment implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-
-		if (progress.isShowing()) {
-			WorkoutTimer.setBase(SystemClock.elapsedRealtime());
-			WorkoutTimer.start();
-			progress.dismiss();
+		if(Start_StopButton.getText().equals("Pause Workout")){
+			if (progress.isShowing()) {
+				WorkoutTimer.setBase(SystemClock.elapsedRealtime());
+				WorkoutTimer.start();
+				progress.dismiss();
+				
+				
+				Time t = new Time();
+				t.setToNow();
+				currentWorkoutInfoRK.SetStartTime(t);
+				currentWorkoutInfoWNC.SetStartTime(t);
+			}
+			
+			// Creating a LatLng object for the current location
+	        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+	        
+	        
+	        // Showing the current location in Google Map
+	        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+	
+	        // Zoom in the Google Map
+	        map.animateCamera(CameraUpdateFactory.zoomTo(17));
+			CoordinateInformation CurrentLocation = new CoordinateInformation();
+			CurrentLocation.SetLatitude(latLng.latitude);
+			CurrentLocation.SetLongitude(latLng.longitude);
+			CurrentLocation.SetAltitude(location.getAltitude());
+			CurrentLocation.SetCurrentDateTime();
 			
 			
-			Time t = new Time();
-			t.setToNow();
-			currentWorkoutInfoRK.SetStartTime(t);
-			currentWorkoutInfoWNC.SetStartTime(t);
-		}
-		
-		// Creating a LatLng object for the current location
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        
-        
-        
-     // Showing the current location in Google Map
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-        // Zoom in the Google Map
-        map.animateCamera(CameraUpdateFactory.zoomTo(17));
-		CoordinateInformation CurrentLocation = new CoordinateInformation();
-		CurrentLocation.SetLatitude(latLng.latitude);
-		CurrentLocation.SetLongitude(latLng.longitude);
-		CurrentLocation.SetAltitude(location.getAltitude());
-		CurrentLocation.SetCurrentDateTime();
-		
-		
-
-        
-		
-		//Check to see if user is in WNC
-		if (WNCboundaries.contains(CurrentLocation.GetLatitude(), CurrentLocation.GetLongitude()))
-		{
-			if (currentWorkoutInfoWNC.JustLeftWatershed == true)
+	
+	        
+			
+			//Check to see if user is in WNC
+			if (WNCboundaries.contains(CurrentLocation.GetLatitude(), CurrentLocation.GetLongitude()))
 			{
-				//if user leaves water shed and reenters
-				//adds current location to array twice so that distance is not calcualted from last point in watershed.
-				//prevents user from entering watershed, driving to other side, multiple times to get 25 miles.
+				if (currentWorkoutInfoWNC.JustLeftWatershed == true)
+				{
+					//if user leaves water shed and reenters
+					//adds current location to array twice so that distance is not calcualted from last point in watershed.
+					//prevents user from entering watershed, driving to other side, multiple times to get 25 miles.
+					currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
+					currentWorkoutInfoWNC.JustLeftWatershed = false;
+				}
+				
+				if(currentWorkoutInfoWNC.wasWorkoutPaused){
+					//WorkoutTimer.start();	
+					currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
+					currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
+					currentWorkoutInfoWNC.wasWorkoutPaused = false;
+				}
+				
+				//add to both Run keeper location array, and WNCMilers Location Array
 				currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
-				currentWorkoutInfoWNC.JustLeftWatershed = false;
+				Double Traveled = currentWorkoutInfoWNC.UpdateDistTraveled();
+				currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
+				currentWorkoutInfoRK.UpdateDistTraveled();
+				if (currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled >= 25.0  && currentWorkoutInfoWNC.isMembershipRedeemed == false)
+				{
+					RedeemButton.setVisibility(View.VISIBLE);
+				}
+				lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled));
+				TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled)*1000));
+			}
+			else//Just add into Run Keeper Location Array
+			{
+				if(currentWorkoutInfoWNC.LocationArray.size() > 0)
+				{
+					currentWorkoutInfoWNC.JustLeftWatershed = true;
+				}
+				currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
+				currentWorkoutInfoRK.UpdateDistTraveled();
 			}
 			
-			//add to both Run keeper location array, and WNCMilers Location Array
-			currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
-			Double Traveled = currentWorkoutInfoWNC.UpdateDistTraveled();
-			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
-			currentWorkoutInfoRK.UpdateDistTraveled();
-			if (currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled >= 25.0  && currentWorkoutInfoWNC.isMembershipRedeemed == false)
+			LatLng PreviousLocation = new LatLng(currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLatitude(),currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLongitude());
+	        
+	        
+	
+			//String message =
+			//String.format("New Location \n Longitude: %1$s \n Latitude: %2$s",
+			//CurrentLocation.GetLongitude(), CurrentLocation.GetLatitude());
+			double Distance = currentWorkoutInfoRK.GetCurDistTraveled();
+			lblDist.setText(String.format("%.2f", Distance) + " mi.");
+			
+			long timeElapsed = SystemClock.elapsedRealtime() - WorkoutTimer.getBase();
+			long pace = 0;
+			if (Distance != 0.0)
 			{
-				RedeemButton.setVisibility(View.VISIBLE);
+				pace = (long) (timeElapsed/Distance);
 			}
-			lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled));
-			TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled)*1000));
-		}
-		else//Just add into Run Keeper Location Array
-		{
-			if(currentWorkoutInfoWNC.LocationArray.size() > 0)
-			{
-				currentWorkoutInfoWNC.JustLeftWatershed = true;
+			int hours = (int) (pace / 3600000);
+			int minutes = (int) (pace - hours * 3600000) / 60000;
+			int seconds = (int) (pace - hours * 3600000 - minutes * 60000) / 1000;
+			lblPace.setText(Integer.toString(hours)+ ":"+Integer.toString(minutes)+ ":"+Integer.toString(seconds));
+			
+			Drawline(PreviousLocation, latLng, pace);
+		}else{
+			if(!Start_StopButton.getText().equals("New Workout")){
+				currentWorkoutInfoWNC.wasWorkoutPaused = true;
 			}
-			currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
-			currentWorkoutInfoRK.UpdateDistTraveled();
 		}
-		
-		LatLng PreviousLocation = new LatLng(currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLatitude(),currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLongitude());
-        
-        
-
-		//String message =
-		//String.format("New Location \n Longitude: %1$s \n Latitude: %2$s",
-		//CurrentLocation.GetLongitude(), CurrentLocation.GetLatitude());
-		double Distance = currentWorkoutInfoRK.GetCurDistTraveled();
-		lblDist.setText(String.format("%.2f", Distance) + " mi.");
-		
-		long timeElapsed = SystemClock.elapsedRealtime() - WorkoutTimer.getBase();
-		long pace = 0;
-		if (Distance != 0.0)
-		{
-			pace = (long) (timeElapsed/Distance);
-		}
-		int hours = (int) (pace / 3600000);
-		int minutes = (int) (pace - hours * 3600000) / 60000;
-		int seconds = (int) (pace - hours * 3600000 - minutes * 60000) / 1000;
-		lblPace.setText(Integer.toString(hours)+ ":"+Integer.toString(minutes)+ ":"+Integer.toString(seconds));
-		
-		Drawline(PreviousLocation, latLng, pace);
-		
+			
 	}
 	
 	private void Drawline(LatLng PreviousLocation, LatLng CurLoc, long pace)
@@ -526,14 +548,22 @@ public class Workout extends SherlockFragment implements LocationListener {
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
+		String locationProviders = Settings.System.getString(getActivity().getContentResolver(),
+				   Settings.System.LOCATION_PROVIDERS_ALLOWED);
+
+		// check if enabled and if not prompt user to enable GPS		   
+		if (!locationProviders.contains(LocationManager.GPS_PROVIDER)) {
+			if(Start_StopButton.getText().equals("Pause Workout")){
+				Start_StopButton.performClick();
+			}
+			showEnableGpsPrompt();
+		}
 
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-
+		 
 	}
 
 	@Override
