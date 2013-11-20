@@ -1,6 +1,7 @@
 package com.watershednaturecenter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -48,6 +49,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.watershednaturecenter.Dialogs.LoginDialog;
 import com.watershednaturecenter.Dialogs.SubmitWorkoutDialog;
@@ -69,7 +71,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 	private TextView lblPace;
 	private TextView lblTotalWNCMiles;
 	private ProgressBar TotalMilesProgressBar;
-	private PolylineOptions line;
+	ArrayList<PolylineOptions> PolyLines;
+	//private PolylineOptions line;
 	
 
 	// FOR pushing MOCK LOCATIOn
@@ -324,7 +327,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 				currentWorkoutInfoWNC.resetWorkoutInfo();
 				currentWorkoutInfoRK.resetWorkoutInfo();
 				map.clear();
-				line = new PolylineOptions();
+				PolyLines =  new ArrayList<PolylineOptions>();
 				
 				//TODO need to make function for overall Workout Initialization
 				
@@ -337,15 +340,15 @@ public class Workout extends SherlockFragment implements LocationListener {
 				// quite as many points.
 				
 				//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
-				//locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),3000,3,this);
+				locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),2000,1,this);
 				
 				// Push Locations
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
-				try {
-					new PushLocations().execute(1);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
+				//try {
+					//new PushLocations().execute(1);
+				//} catch (Exception e) {
+					//e.printStackTrace();
+				//}
 				Start_StopButton.setText("Pause Workout");
 				SubmitWorkout.setEnabled(false);
 
@@ -361,6 +364,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 			WorkoutTimer.stop();
 			stoppedTime = WorkoutTimer.getBase() - SystemClock.elapsedRealtime();
 			//locationManager.removeUpdates(this);
+			currentWorkoutInfoRK.wasWorkoutPaused = true;
+			currentWorkoutInfoWNC.wasWorkoutPaused = true;
 			Start_StopButton.setText("Resume Workout");
 			SubmitWorkout.setEnabled(true);
 		}
@@ -413,7 +418,6 @@ public class Workout extends SherlockFragment implements LocationListener {
 			// Posts the workout for the coordinates gathered between start and
 			// stop
 			//
-			currentWorkoutInfoWNC.wasWorkoutPaused = false;
 			Start_StopButton.setText("New Workout");
 			SubmitWorkoutDialog SD = new SubmitWorkoutDialog(this.getSherlockActivity());
 			SD.setTargetFragment(this, 0);
@@ -423,7 +427,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		if(Start_StopButton.getText().equals("Pause Workout")){
+		if(Start_StopButton.getText().equals("Pause Workout") || Start_StopButton.getText().equals("Resume Workout")){
 			if (progress.isShowing()) {
 				WorkoutTimer.setBase(SystemClock.elapsedRealtime());
 				WorkoutTimer.start();
@@ -454,50 +458,63 @@ public class Workout extends SherlockFragment implements LocationListener {
 			
 	
 	        
-			
-			//Check to see if user is in WNC
-			if (WNCboundaries.contains(CurrentLocation.GetLatitude(), CurrentLocation.GetLongitude()))
+			//First check to see if workout is paused
+			if (Start_StopButton.getText().equals("Resume Workout") == false)
 			{
-				if (currentWorkoutInfoWNC.JustLeftWatershed == true)
+				//Check to see if user is in WNC
+				if (WNCboundaries.contains(CurrentLocation.GetLatitude(), CurrentLocation.GetLongitude()))
 				{
-					//if user leaves water shed and reenters
-					//adds current location to array twice so that distance is not calcualted from last point in watershed.
-					//prevents user from entering watershed, driving to other side, multiple times to get 25 miles.
-					currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
-					currentWorkoutInfoWNC.JustLeftWatershed = false;
-				}
-				
-				if(currentWorkoutInfoWNC.wasWorkoutPaused){
-					//WorkoutTimer.start();	
+					if (currentWorkoutInfoWNC.JustLeftWatershed == true)
+					{
+						//if user leaves water shed and reenters
+						//adds current location to array twice so that distance is not calcualted from last point in watershed.
+						//prevents user from entering watershed, driving to other side, multiple times to get 25 miles.
+						currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
+						currentWorkoutInfoWNC.JustLeftWatershed = false;
+					}
+					
+					if(currentWorkoutInfoWNC.wasWorkoutPaused){
+						//WorkoutTimer.start();	
+						currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
+						currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
+						currentWorkoutInfoWNC.wasWorkoutPaused = false;
+						currentWorkoutInfoWNC.wasWorkoutPaused = false;
+					}
+					
+					//add to both Run keeper location array, and WNCMilers Location Array
 					currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
 					currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
-					currentWorkoutInfoWNC.wasWorkoutPaused = false;
-				}
-				
-				//add to both Run keeper location array, and WNCMilers Location Array
-				currentWorkoutInfoWNC.LocationArray.add(CurrentLocation);
-				Double Traveled = currentWorkoutInfoWNC.UpdateDistTraveled();
-				currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
-				currentWorkoutInfoRK.UpdateDistTraveled();
-				if (currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled >= 25.0  && currentWorkoutInfoWNC.isMembershipRedeemed == false)
-				{
-					RedeemButton.setVisibility(View.VISIBLE);
-				}
-				lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled));
-				TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled)*1000));
-			}
-			else//Just add into Run Keeper Location Array
-			{
-				if(currentWorkoutInfoWNC.LocationArray.size() > 0)
-				{
-					currentWorkoutInfoWNC.JustLeftWatershed = true;
-				}
-				currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
-				currentWorkoutInfoRK.UpdateDistTraveled();
-			}
+					Double Traveled = currentWorkoutInfoWNC.UpdateDistTraveled();
+					currentWorkoutInfoRK.UpdateDistTraveled();
+					if (currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled >= 25.0  && currentWorkoutInfoWNC.isMembershipRedeemed == false)
+					{
+						RedeemButton.setVisibility(View.VISIBLE);
+					}
+					lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled));
+					TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser+Traveled)*1000));
+					}
+					else//Just add into Run Keeper Location Array
+					{
+						if(currentWorkoutInfoWNC.LocationArray.size() > 0)
+						{
+							currentWorkoutInfoWNC.JustLeftWatershed = true;
+						}
+						
+						if(currentWorkoutInfoWNC.wasWorkoutPaused){
+							//WorkoutTimer.start();	
+							currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
+							currentWorkoutInfoWNC.wasWorkoutPaused = false;
+						}
+						currentWorkoutInfoRK.LocationArray.add(CurrentLocation);
+						currentWorkoutInfoRK.UpdateDistTraveled();
+					}
 			
-			LatLng PreviousLocation = new LatLng(currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLatitude(),currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-1).GetLongitude());
-	        
+			
+				LatLng PreviousLocation;
+				if (currentWorkoutInfoRK.LocationArray.size() >1)
+					PreviousLocation = new LatLng(currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-2).GetLatitude(),currentWorkoutInfoRK.LocationArray.get(currentWorkoutInfoRK.LocationArray.size()-2).GetLongitude());
+				else
+					PreviousLocation = latLng;
 	        
 	
 			//String message =
@@ -517,33 +534,45 @@ public class Workout extends SherlockFragment implements LocationListener {
 			int seconds = (int) (pace - hours * 3600000 - minutes * 60000) / 1000;
 			lblPace.setText(Integer.toString(hours)+ ":"+Integer.toString(minutes)+ ":"+Integer.toString(seconds));
 			
-			Drawline(PreviousLocation, latLng, pace);
+			Drawline(PreviousLocation, latLng, hours, minutes);
+			}
 		}else{
 			if(!Start_StopButton.getText().equals("New Workout")){
-				currentWorkoutInfoWNC.wasWorkoutPaused = true;
+				currentWorkoutInfoWNC.wasWorkoutPaused = false;
 			}
 		}
 			
 	}
 	
-	private void Drawline(LatLng PreviousLocation, LatLng CurLoc, long pace)
+	
+	private void Drawline(LatLng PreviousLocation, LatLng CurLoc, int hours, int minutes)
 	{
-		line.width(5);
+		PolylineOptions pline = new PolylineOptions();
 		
-		//line.color(Color.RED);
-		if (pace < 360000)line.color(Color.rgb(255, 0, 0));
-		else if(pace < 42000)line.color(Color.rgb(255, 85, 0));
-		else if(pace < 48000)line.color(Color.rgb(255, 187, 0));
-		else if(pace < 54000)line.color(Color.rgb(255, 255, 0));
-		else if(pace < 60000)line.color(Color.rgb(187, 255, 0));
-		else if(pace < 66000)line.color(Color.rgb(85, 255, 0));
-		else line.color(Color.rgb(0, 255, 0));
+		pline.width(5);
+		if (hours ==0)
+		{
+			if (minutes < 5)pline.color(Color.rgb(255, 0, 0));
+			
+			else if(minutes < 6)pline.color(Color.rgb(255, 50, 0));
+			else if(minutes < 7)pline.color(Color.rgb(255, 101, 0));
+			else if(minutes < 8)pline.color(Color.rgb(255, 153, 0));
+			else if(minutes < 9)pline.color(Color.rgb(255, 204, 0));
+			else if(minutes < 10)pline.color(Color.rgb(255, 255, 0));
+			else if(minutes < 11)pline.color(Color.rgb(204, 255, 0));
+			else if(minutes < 12)pline.color(Color.rgb(153, 255, 0));
+			else if(minutes < 13)pline.color(Color.rgb(101, 255, 0));
+			else if(minutes < 14)pline.color(Color.rgb(50, 255, 0));
+			else pline.color(Color.rgb(0, 255, 0));
+		}
+		else pline.color(Color.rgb(0, 255, 0));
 		//else if(pace < 72000)line.color(Color.parseColor("#00FF00"));
 		
 			
-        
-        line.add(PreviousLocation,CurLoc);
-        map.addPolyline(line);
+		
+		pline.add(PreviousLocation,CurLoc);
+		PolyLines.add(pline);
+        map.addPolyline(PolyLines.get(PolyLines.size()-1));
 	}
 
 	@Override
