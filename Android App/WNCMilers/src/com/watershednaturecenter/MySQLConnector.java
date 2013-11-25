@@ -229,21 +229,22 @@ public class MySQLConnector{
 				else if(RKlogin.toString().isEmpty())
  					throw new Exception("Doesn't Look like you are logged in");
 				
+ 				MCrypt mcrypt = new MCrypt();
+ 				
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("RKID", RKlogin.toString()));
-				//TODO: Change these to proper user info stuff
-				params.add(new BasicNameValuePair("Title", arg0[0].designation));
-				params.add(new BasicNameValuePair("FirstName", arg0[0].firstName));
-				params.add(new BasicNameValuePair("LastName", arg0[0].lastName));
-				params.add(new BasicNameValuePair("AddressLine1", arg0[0].addressLine1));
-				params.add(new BasicNameValuePair("AddressLine2", arg0[0].addressLine2));
-				params.add(new BasicNameValuePair("City", arg0[0].city));
-				params.add(new BasicNameValuePair("State", arg0[0].state));
-				params.add(new BasicNameValuePair("Zip", arg0[0].zipCode));
-				params.add(new BasicNameValuePair("Phone", arg0[0].phoneNumber));
-				params.add(new BasicNameValuePair("EmailAddress", arg0[0].emailAddress));
-				params.add(new BasicNameValuePair("membershiplevel", arg0[0].membershipLevel));
-				params.add(new BasicNameValuePair("BirthDate", arg0[0].birthdate));
+				params.add(new BasicNameValuePair("Title", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].designation))));
+				params.add(new BasicNameValuePair("FirstName", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].firstName))));
+				params.add(new BasicNameValuePair("LastName", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].lastName))));
+				params.add(new BasicNameValuePair("AddressLine1", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].addressLine1))));
+				params.add(new BasicNameValuePair("AddressLine2", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].addressLine2))));
+				params.add(new BasicNameValuePair("City", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].city))));
+				params.add(new BasicNameValuePair("State", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].state))));
+				params.add(new BasicNameValuePair("Zip", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].zipCode))));
+				params.add(new BasicNameValuePair("Phone", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].phoneNumber))));
+				params.add(new BasicNameValuePair("EmailAddress", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].emailAddress))));
+				params.add(new BasicNameValuePair("membershiplevel", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].membershipLevel))));
+				params.add(new BasicNameValuePair("BirthDate", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].birthdate))));
 								
 								
 				DefaultHttpClient httpClient = new DefaultHttpClient();
