@@ -244,7 +244,7 @@ public class MySQLConnector{
 				params.add(new BasicNameValuePair("Phone", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].phoneNumber))));
 				params.add(new BasicNameValuePair("EmailAddress", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].emailAddress))));
 				params.add(new BasicNameValuePair("membershiplevel", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].membershipLevel))));
-				params.add(new BasicNameValuePair("BirthDate", MCrypt.bytesToHex( mcrypt.encrypt(arg0[0].birthdate))));
+				params.add(new BasicNameValuePair("BirthDate", arg0[0].birthdate));
 								
 								
 				DefaultHttpClient httpClient = new DefaultHttpClient();

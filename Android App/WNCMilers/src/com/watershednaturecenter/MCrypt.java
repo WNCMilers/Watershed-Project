@@ -9,12 +9,12 @@ import javax.crypto.spec.SecretKeySpec;
 //source: http://androidsnippets.com/encrypt-decrypt-between-android-and-php
 public class MCrypt{
 
-    private String iv = "(copy key here)";
+    private String iv = "(16 bit key here)";
     private IvParameterSpec ivspec;
     private SecretKeySpec keyspec;
     private Cipher cipher;
     
-    private String SecretKey = "(copy key here)";
+    private String SecretKey = "(16 bit key here)";
     
     public MCrypt()
     {
@@ -107,7 +107,7 @@ public class MCrypt{
     
     private static String padString(String source)
     {
-      char paddingChar = '0';
+      char paddingChar = ' ';
       int size = 16;
       int x = source.length() % size;
       int padLength = size - x;
