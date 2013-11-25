@@ -15,6 +15,7 @@ public class WorkoutInfo {
 	 public double TotalWNCMilesForUser = 0.0;
 	 public boolean isMembershipRedeemed = true;
 	 public boolean JustLeftWatershed = false;
+	 public boolean wasWorkoutPaused = false;
 	 
 	 public ArrayList<CoordinateInformation> LocationArray = new ArrayList<CoordinateInformation>();
 	    
