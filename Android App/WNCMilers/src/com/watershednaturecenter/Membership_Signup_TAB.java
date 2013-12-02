@@ -1,8 +1,5 @@
 package com.watershednaturecenter;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 import android.content.Context;
@@ -31,8 +28,8 @@ public class Membership_Signup_TAB extends SherlockFragment
 	//private String firstName, lastName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
 	private Button submitButton;
 	private EditText firstNameField, lastNameField, addressLine1Field, addressLine2Field, cityField, 
-						zipCodeField, phoneNumberField, emailAddressField, birthDayField, birthYearField;
-	private Spinner designationSpinner, stateSpinner, monthSpinner;
+						zipCodeField, phoneNumberField, emailAddressField;
+	private Spinner designationSpinner, stateSpinner;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,9 +47,6 @@ public class Membership_Signup_TAB extends SherlockFragment
 		zipCodeField = (EditText) view.findViewById(R.id.zipCode);
 		phoneNumberField = (EditText) view.findViewById(R.id.PhoneNumber);
 		emailAddressField = (EditText) view.findViewById(R.id.EmailAddress);
-		monthSpinner = (Spinner) view.findViewById(R.id.BirthMonthSpinner);
-		birthDayField = (EditText) view.findViewById(R.id.DayEditText);
-		birthYearField = (EditText) view.findViewById(R.id.YearEditText);
 		//membershipLevelSpinner = (Spinner) view.findViewById(R.id.MembershipLevelSelection);
 				
 		stateSpinner.setSelection(13);
@@ -90,17 +84,6 @@ public class Membership_Signup_TAB extends SherlockFragment
 			member.emailAddress = emailAddressField.getText().toString().trim();
 			member.membershipLevel = "Individual";
 			//member.membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
-			
-			if(!birthYearField.getText().toString().isEmpty() && !birthDayField.getText().toString().trim().isEmpty()){
-				GregorianCalendar birthdate = new GregorianCalendar (Integer.parseInt(birthYearField.getText().toString()), 
-						monthSpinner.getSelectedItemPosition(), 
-						Integer.parseInt(birthDayField.getText().toString()));
-				
-				SimpleDateFormat ft =  new SimpleDateFormat ("MM/dd/yyyy");
-				ft.setCalendar(birthdate);
-				
-				member.birthdate = ft.format(birthdate.getTime());
-			}
 			
 			return true;
 		}else{

@@ -129,52 +129,5 @@
 	        android:layout_alignParentLeft="true"
 	        android:text="@string/submit" />
 
-		<LinearLayout
-		    android:id="@+id/BirthdateLayout"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_above="@+id/submitButton"
-		    android:layout_alignParentLeft="true"
-		    android:layout_below="@+id/EmailAddress"
-		    android:orientation="horizontal" >
-
-			<TextView
-			    android:id="@+id/textView1"
-			    android:layout_width="wrap_content"
-			    android:layout_height="34dp"
-			    android:drawablePadding="5dp"
-			    android:text="@string/BirthDate"
-			    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-		    <Spinner
-		        android:id="@+id/BirthMonthSpinner"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="0.16"
-		        android:entries="@array/month_array"
-		        android:spinnerMode="dialog" />
-
-		    <EditText
-		        android:id="@+id/DayEditText"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight=".15"
-		        android:ems="10"
-		        android:hint="@string/Day"
-		        android:imeOptions="actionNext"
-		        android:inputType="number" />
-
-		    <EditText
-		        android:id="@+id/YearEditText"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight=".15"
-		        android:ems="10"
-		        android:hint="@string/Year"
-		        android:imeOptions="actionDone"
-		        android:inputType="number" />
-
-		</LinearLayout>
-
 	</RelativeLayout>
 </ScrollView>

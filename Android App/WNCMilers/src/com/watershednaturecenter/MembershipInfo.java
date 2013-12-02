@@ -12,5 +12,4 @@ public class MembershipInfo {
 	String phoneNumber;
 	String emailAddress;
 	String membershipLevel;
-	String birthdate;
 }

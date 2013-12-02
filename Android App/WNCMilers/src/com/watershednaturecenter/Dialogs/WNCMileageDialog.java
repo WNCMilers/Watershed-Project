@@ -37,7 +37,7 @@ public class WNCMileageDialog extends DialogFragment{
         }
         else if(Mileage >= 25 && IsRedeemed == false)
         {
-        	title = Double.toString(Mileage) + " miles completed at WNC. Congradulations you've reached 25 miles!! would you like to redeem membership?";
+        	title = Double.toString(Mileage) + " miles completed at WNC. Congratulations you've reached 25 miles!! would you like to redeem membership?";
         	builder.setMessage(title)
             .setPositiveButton("Redeem Now", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {

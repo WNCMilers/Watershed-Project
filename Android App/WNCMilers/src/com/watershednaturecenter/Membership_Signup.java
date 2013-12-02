@@ -1,8 +1,5 @@
 package com.watershednaturecenter;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
@@ -34,8 +31,8 @@ public class Membership_Signup extends Activity
 	//private String firstName, lastName, addressLine1, addressLine2, city, state, zipCode, phoneNumber, emailAddress, membershipLevel;
 	private Button submitButton;
 	private EditText firstNameField, lastNameField, addressLine1Field, addressLine2Field, cityField, 
-						zipCodeField, phoneNumberField, emailAddressField, birthDayField, birthYearField;
-	private Spinner designationSpinner, stateSpinner, monthSpinner;
+						zipCodeField, phoneNumberField, emailAddressField;
+	private Spinner designationSpinner, stateSpinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +49,6 @@ public class Membership_Signup extends Activity
 		zipCodeField = (EditText) findViewById(R.id.zipCode);
 		phoneNumberField = (EditText) findViewById(R.id.PhoneNumber);
 		emailAddressField = (EditText) findViewById(R.id.EmailAddress);
-		monthSpinner = (Spinner) findViewById(R.id.BirthMonthSpinner);
-		birthDayField = (EditText) findViewById(R.id.DayEditText);
-		birthYearField = (EditText) findViewById(R.id.YearEditText);
 		//membershipLevelSpinner = (Spinner) view.findViewById(R.id.MembershipLevelSelection);
 				
 		stateSpinner.setSelection(13);
@@ -94,17 +88,6 @@ public class Membership_Signup extends Activity
 			member.emailAddress = emailAddressField.getText().toString().trim();
 			member.membershipLevel = "WNC Miler";
 			//member.membershipLevel = membershipLevelSpinner.getSelectedItem().toString();
-			
-			if(!birthYearField.getText().toString().isEmpty() && !birthDayField.getText().toString().trim().isEmpty()){
-				GregorianCalendar birthdate = new GregorianCalendar (Integer.parseInt(birthYearField.getText().toString()), 
-						monthSpinner.getSelectedItemPosition(), 
-						Integer.parseInt(birthDayField.getText().toString()));
-				
-				SimpleDateFormat ft =  new SimpleDateFormat ("MM/dd/yyyy");
-				ft.setCalendar(birthdate);
-				
-				member.birthdate = ft.format(birthdate.getTime()).toString();
-			}
 			
 			return true;
 		}else{
