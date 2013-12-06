@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.watershednaturecenter.MySQLConnector.RegisterMember;
 
 public class Membership_Signup_TAB extends SherlockFragment
 {
@@ -61,7 +62,7 @@ public class Membership_Signup_TAB extends SherlockFragment
               	//Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
             	if (getDataFromForm()){
             	    MySQLConnector MYSQLCOMM = new MySQLConnector(getActivity().getSupportFragmentManager());
-	            	MYSQLCOMM.RegisterMember(member);
+	            	MYSQLCOMM.RegisterMember(member, Membership_Signup_TAB.this.getActivity());
             	}
         	}
         });

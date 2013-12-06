@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
@@ -37,6 +38,7 @@ public class MySQLConnector{
 	Context context = WNC_MILERS.getInstance();
 	FragmentManager FM;
 	WorkoutInfo currentWorkout = ((WNC_MILERS) context).get_CurrentWorkoutWNC();
+	Activity MembershipPageActivity;
 
 	public MySQLConnector(FragmentManager fm)
 	{
@@ -63,8 +65,9 @@ public class MySQLConnector{
 		}
 	}
 	
-	public void RegisterMember(MembershipInfo member)
+	public void RegisterMember(MembershipInfo member, Activity CalledFrom)
 	{
+		MembershipPageActivity = CalledFrom;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new RegisterMember().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, member);
 		} else {
@@ -271,6 +274,10 @@ public class MySQLConnector{
 				Toast.makeText(context,ErrorMsg ,Toast.LENGTH_LONG).show();
 			else
 				Toast.makeText(context, "Thanks " + MemberBeingAdded.firstName + " " + MemberBeingAdded.lastName, Toast.LENGTH_SHORT).show();
+				currentWorkout.isMembershipRedeemed = true;
+			Intent workoutIntent = new Intent(MembershipPageActivity, MainActivity.class);
+			workoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			MembershipPageActivity.startActivity(workoutIntent);
 		}
 		
 	}

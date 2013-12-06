@@ -52,7 +52,6 @@ public class Membership_Signup extends Activity
 		//membershipLevelSpinner = (Spinner) view.findViewById(R.id.MembershipLevelSelection);
 				
 		stateSpinner.setSelection(13);
-		
 		submitButton = (Button) findViewById(R.id.submitButton);
 		submitButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -63,10 +62,7 @@ public class Membership_Signup extends Activity
               	//Toast.makeText(getSherlockActivity(), "Submit Button Clicked", Toast.LENGTH_SHORT).show();
             	if (getDataFromForm()){
             	    MySQLConnector MYSQLCOMM = new MySQLConnector();
-	            	MYSQLCOMM.RegisterMember(member);
-	            	Intent workoutIntent = new Intent(Membership_Signup.this, MainActivity.class);
-	    			workoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    			Membership_Signup.this.startActivity(workoutIntent);
+	            	MYSQLCOMM.RegisterMember(member, Membership_Signup.this);
             	}
         	}
         });
