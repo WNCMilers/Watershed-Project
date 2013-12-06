@@ -1,55 +1,38 @@
 package com.watershednaturecenter;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.app.AlertDialog;
-import android.app.Notification.Builder;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnDismissListener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.text.InputFilter.LengthFilter;
 import android.text.format.Time;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.lang.Math;
 import android.location.Criteria;
-
-import org.apache.http.client.methods.HttpPost;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.watershednaturecenter.Dialogs.LoginDialog;
 import com.watershednaturecenter.Dialogs.SubmitWorkoutDialog;
@@ -60,19 +43,19 @@ import com.watershednaturecenter.GPSItems.Polygon;
 import com.watershednaturecenter.GPSItems.WorkoutInfo;
 
 public class Workout extends SherlockFragment implements LocationListener {
-	private static final int GPS_ENABLE = 1;
+	
+	
 	private Button Start_StopButton;
 	private Button SubmitWorkout;
 	private Button RedeemButton;
 	private Chronometer WorkoutTimer;
 	private long stoppedTime;
-	private ProgressDialog progress;
+	private ProgressDialog WaitingForGPSDialog;
 	private TextView lblDist;
 	private TextView lblPace;
 	private TextView lblTotalWNCMiles;
 	private ProgressBar TotalMilesProgressBar;
 	ArrayList<PolylineOptions> PolyLines;
-	//private PolylineOptions line;
 	
 
 	// FOR pushing MOCK LOCATIOn
@@ -88,42 +71,101 @@ public class Workout extends SherlockFragment implements LocationListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		currentWorkoutInfoWNC = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutWNC();
-		currentWorkoutInfoRK = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutRK(); 
-		
-		
 		View view = inflater.inflate(R.layout.workout, container, false);
-		RedeemButton = (Button)view.findViewById(R.id.btnRedeemMembership);
-		RedeemButton.setVisibility(View.INVISIBLE);
+		InitializeWorkout();
+		//Assigns and initializes the controls on the screen
+		InitializeLayout(view);
+		return view;
+	}
+	
+	//Set/Reset all of the workout parameters
+	private void InitializeWorkout()
+	{
+		//workout to keep track of information while at WNC
+		currentWorkoutInfoWNC = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutWNC();
+		//workout to keep track of information while any time running the application
+		currentWorkoutInfoRK = ((WNC_MILERS) getActivity().getApplication()).get_CurrentWorkoutRK();
 		
+		//APIWorking is varaible of class that handles runkeeper api communication
+		APIWORKER = ((WNC_MILERS) getActivity().getApplication())
+				.get_APIWORKER();
+		
+		//Boundaries of the WNC in the form of a polygon
+		WNCboundaries = ((WNC_MILERS) getActivity().getApplication())
+				.get_WNCboundaries();
+	}
+	
+	private void InitializeLayout(View view)
+	{
+		//Assign Controls to variables
 		lblDist = (TextView) view.findViewById(R.id.lblDist);
 		lblPace = (TextView) view.findViewById(R.id.lblPace);
 		lblTotalWNCMiles = (TextView) view.findViewById(R.id.lblMilesCompleted);
+		Start_StopButton = (Button) view.findViewById(R.id.Start_StopWorkout);
+		SubmitWorkout = (Button) view.findViewById(R.id.SubmitWorkout);
+		SupportMapFragment fm = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
+		TotalMilesProgressBar = (ProgressBar)view.findViewById(R.id.progressBarMilesCompleted);
+		WorkoutTimer = (Chronometer) view.findViewById(R.id.WorkoutTimer);
+		
+		//initialize controls
+		map = fm.getMap();
+		map.setMyLocationEnabled(true);
+		
+		///button color
+		Start_StopButton.getBackground().setColorFilter(Color.parseColor("#CCFF66"), PorterDuff.Mode.MULTIPLY);
+		SubmitWorkout.getBackground().setColorFilter(Color.parseColor("#E65050"), PorterDuff.Mode.MULTIPLY);
+		SubmitWorkout.setEnabled(false);
+		
+		TotalMilesProgressBar.setMax(25000);
+		TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser)*1000));
+		
+		RedeemButton = (Button)view.findViewById(R.id.btnRedeemMembership);
+		lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser));
+		
+		locationManager = (LocationManager) getSherlockActivity()
+				.getSystemService(Context.LOCATION_SERVICE);
+		
+		SetButtonClickListeners();
+		SetRedeemButtonVisiblity();
+		ResetMap();
+	}
+	
+	private void SetRedeemButtonVisiblity()
+	{
 		if (currentWorkoutInfoWNC.TotalWNCMilesForUser >= 25.0 && currentWorkoutInfoWNC.isMembershipRedeemed == false)
 		{
 			RedeemButton.setVisibility(View.VISIBLE);
 		}
-		lblTotalWNCMiles.setText(String.format("%.2f mi out of 25.00 mi completed", currentWorkoutInfoWNC.TotalWNCMilesForUser));
-		TotalMilesProgressBar = (ProgressBar)view.findViewById(R.id.progressBarMilesCompleted);
-		TotalMilesProgressBar.setMax(25000);
+		else
+		{
+			RedeemButton.setVisibility(View.INVISIBLE);
+		}
+	}
+	
+	private void InitializeGPS()
+	{
 		
+		Criteria gpsCriteria = getGpsCriteria();
 		
-		SupportMapFragment fm = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
+		//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
+		locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),2000,1,this);
 		
-		map = fm.getMap();
-		map.setMyLocationEnabled(true);
+		// Push Locations
+		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
+		//try {
+			//new PushLocations().execute(1);
+		//} catch (Exception e) {
+			//e.printStackTrace();
+		//}
 		
-		
-		// runKeeperwebView = (WebView) view.findViewById(R.id.webView);
-		APIWORKER = ((WNC_MILERS) getActivity().getApplication())
-				.get_APIWORKER();
-		WNCboundaries = ((WNC_MILERS) getActivity().getApplication())
-				.get_WNCboundaries();
-
-		WorkoutTimer = (Chronometer) view.findViewById(R.id.WorkoutTimer);
-
-		
-		Start_StopButton = (Button) view.findViewById(R.id.Start_StopWorkout);
+		WaitingForGPSDialog = new ProgressDialog(getActivity());
+		WaitingForGPSDialog.setTitle("Starting Workout");
+		WaitingForGPSDialog.setMessage("Wait for GPS fix...");
+		WaitingForGPSDialog.show();
+	}
+	
+	private void SetButtonClickListeners()
+	{
 		Start_StopButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickStart_StopTrackingBtn();
@@ -137,41 +179,11 @@ public class Workout extends SherlockFragment implements LocationListener {
           	   	startActivity(i);
 			}
 		});
-		
-		
-		SubmitWorkout = (Button) view.findViewById(R.id.SubmitWorkout);
-		SubmitWorkout.setEnabled(false);
 		SubmitWorkout.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickSubmitWorkout();
 			}
 		});
-
-		locationManager = (LocationManager) getSherlockActivity()
-				.getSystemService(Context.LOCATION_SERVICE);
-
-		Location lastknownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		try{
-			LatLng lastLoc = new LatLng(lastknownLocation.getLatitude(),lastknownLocation.getLongitude());
-			// Showing the current location in Google Map
-	        map.moveCamera(CameraUpdateFactory.newLatLng(lastLoc));
-
-	        // Zoom in the Google Map
-	        map.animateCamera(CameraUpdateFactory.zoomTo(17));
-	        
-		}
-		catch(Exception e)
-		{
-			map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(38.817480, -89.978670)));
-			// Zoom in the Google Map
-	        map.animateCamera(CameraUpdateFactory.zoomTo(17));
-		}
-		
-				
-		
-		initializelayout();
-		if(view != null) { return view;}
-		else return null;
 	}
 
 	public void checkGpsEnabled(){
@@ -297,17 +309,18 @@ public class Workout extends SherlockFragment implements LocationListener {
 	}
 	
 	public void onClickStart_StopTrackingBtn() {
-		checkGpsEnabled();
+		//checkGpsEnabled();
 		
 		//TODO: enable this block of code to prevent cheaters and delete checkGpsEnabled above.
-//		if(isMockSettingsON(getActivity())){
-//			showDisableMockPrompt();
-//		}else{
-//			checkGpsEnabled();
-//		}
+		if(isMockSettingsON(getActivity())){
+			showDisableMockPrompt();
+		}else{
+			checkGpsEnabled();
+		}
 	}
 	
 	public void runKeeperPrompt(){
+		//Starting Newworkout
 		if (Start_StopButton.getText().equals("New Workout")){
 			if (!LoginStatus())
 			{
@@ -315,43 +328,19 @@ public class Workout extends SherlockFragment implements LocationListener {
 			}
 			else
 			{
-				// reset Workouts Each Time
-				currentWorkoutInfoWNC.resetWorkoutInfo();
-				currentWorkoutInfoRK.resetWorkoutInfo();
-				map.clear();
-				PolyLines =  new ArrayList<PolylineOptions>();
-				
-				//TODO need to make function for overall Workout Initialization
-				
-				Criteria gpsCriteria = getGpsCriteria();
-				
-				
-				
-				// Getting LocationManager object from System Service
-				// LOCATION_SERVICE. Need to mess with parameters to not record
-				// quite as many points.
-				
-				//TODO: uncomment this to enable Real GPS updates. TODO make able to easily turn on/off mock locations.
-				locationManager.requestLocationUpdates(locationManager.getBestProvider(gpsCriteria, true),2000,1,this);
-				
-				// Push Locations
-				//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, this);
-				//try {
-					//new PushLocations().execute(1);
-				//} catch (Exception e) {
-					//e.printStackTrace();
-				//}
 				Start_StopButton.setText("Pause Workout");
 				SubmitWorkout.setEnabled(false);
-
-				progress = new ProgressDialog(getActivity());
-				progress.setTitle("Starting Workout");
-				progress.setMessage("Wait for GPS fix...");
-				progress.show();
+				
+				// reset Workouts Each Time
+				ResetWorkouts();
+				ResetMap();
+				InitializeGPS();
 			}
 			
 			
 		}
+		
+		//Workout Is already started
 		else if (Start_StopButton.getText().equals("Pause Workout")){
 			WorkoutTimer.stop();
 			stoppedTime = WorkoutTimer.getBase() - SystemClock.elapsedRealtime();
@@ -361,6 +350,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 			Start_StopButton.setText("Resume Workout");
 			SubmitWorkout.setEnabled(true);
 		}
+		//workout is paused and now resuming
 		else {
 			WorkoutTimer.start();
 			WorkoutTimer.setBase(SystemClock.elapsedRealtime() + stoppedTime);
@@ -369,6 +359,34 @@ public class Workout extends SherlockFragment implements LocationListener {
 			SubmitWorkout.setEnabled(false);
 		}
 		
+	}
+	
+	private void ResetWorkouts()
+	{
+		currentWorkoutInfoWNC.resetWorkoutInfo();
+		currentWorkoutInfoRK.resetWorkoutInfo();
+	}
+	
+	private void ResetMap()
+	{
+		map.clear();
+		PolyLines =  new ArrayList<PolylineOptions>();
+		Location lastknownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		try{
+			LatLng lastLoc = new LatLng(lastknownLocation.getLatitude(),lastknownLocation.getLongitude());
+			// Showing the current location in Google Map
+	        map.moveCamera(CameraUpdateFactory.newLatLng(lastLoc));
+
+	        // Zoom in the Google Map
+	        map.animateCamera(CameraUpdateFactory.zoomTo(17));
+	        
+		}
+		catch(Exception e)
+		{
+			map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(38.817480, -89.978670)));
+			// Zoom in the Google Map
+	        map.animateCamera(CameraUpdateFactory.zoomTo(17));
+		}
 	}
 	
 	public void DisplayLoginPopup()
@@ -394,22 +412,9 @@ public class Workout extends SherlockFragment implements LocationListener {
 		return criteria;
 	}
 
-	public void onClickStopTrackingBtn() {
-
-	}
-
 	public void onClickSubmitWorkout() {
-		
-			// BELOW WAS just a test to get number miles walked
-			// double miles = APIWORKER.GetWalkingDist();
-			// String milesWalkedMessage =
-			// String.format("Cool, You have walked %.2f miles so far.", miles);
-			// Toast.makeText(getSherlockActivity(), milesWalkedMessage,
-			// Toast.LENGTH_SHORT).show();
-
 			// Posts the workout for the coordinates gathered between start and
 			// stop
-			//
 			Start_StopButton.setText("New Workout");
 			SubmitWorkoutDialog SD = new SubmitWorkoutDialog(this.getSherlockActivity());
 			SD.setTargetFragment(this, 0);
@@ -417,19 +422,23 @@ public class Workout extends SherlockFragment implements LocationListener {
 			SD.show(FM,"SubmitWorkoutDialogNotice");
 	};
 
+	
+	public void StartTimers()
+	{
+		WorkoutTimer.setBase(SystemClock.elapsedRealtime());
+		WorkoutTimer.start();
+		Time t = new Time();
+		t.setToNow();
+		currentWorkoutInfoRK.SetStartTime(t);
+		currentWorkoutInfoWNC.SetStartTime(t);
+	}
 	@Override
 	public void onLocationChanged(Location location) {
+		//make sure workout is currently started
 		if(Start_StopButton.getText().equals("Pause Workout") || Start_StopButton.getText().equals("Resume Workout")){
-			if (progress.isShowing()) {
-				WorkoutTimer.setBase(SystemClock.elapsedRealtime());
-				WorkoutTimer.start();
-				progress.dismiss();
-				
-				
-				Time t = new Time();
-				t.setToNow();
-				currentWorkoutInfoRK.SetStartTime(t);
-				currentWorkoutInfoWNC.SetStartTime(t);
+			if (WaitingForGPSDialog.isShowing()) {
+				WaitingForGPSDialog.dismiss();
+				StartTimers();
 			}
 			
 			// Creating a LatLng object for the current location
@@ -441,6 +450,8 @@ public class Workout extends SherlockFragment implements LocationListener {
 	
 	        // Zoom in the Google Map
 	        map.animateCamera(CameraUpdateFactory.zoomTo(17));
+	        
+	        
 			CoordinateInformation CurrentLocation = new CoordinateInformation();
 			CurrentLocation.SetLatitude(latLng.latitude);
 			CurrentLocation.SetLongitude(latLng.longitude);
@@ -721,13 +732,7 @@ public class Workout extends SherlockFragment implements LocationListener {
 		}
 	}
 	
-	private void initializelayout()
-	{
-		
-		Start_StopButton.getBackground().setColorFilter(Color.parseColor("#CCFF66"), PorterDuff.Mode.MULTIPLY);
-		SubmitWorkout.getBackground().setColorFilter(Color.parseColor("#E65050"), PorterDuff.Mode.MULTIPLY);
-		TotalMilesProgressBar.setProgress((int)((currentWorkoutInfoWNC.TotalWNCMilesForUser)*1000));
-	}
+	
 
 	@Override
     public void onDestroyView() {

@@ -41,8 +41,8 @@ public class HealthGraphApi {
 	private Activity calledfrom;
 	private String authCode;
 	private String accessToken;
-	private final static String CLIENT_ID = "370386b2c7bc4dad9456ee168d812be0";
-    private final static String CLIENT_SECRET = "a0be7566339c4869bf101389a1dd45fa";
+	private final static String CLIENT_ID = "40853b2c290d46cf9230e491a6e31f2b";
+    private final static String CLIENT_SECRET = "6e73db23ba2141edb292923020c65134";
     private final static String CALLBACK_URL = "http://www.watershednaturecenter.uri/callback";
     
     @SuppressLint("SetJavaScriptEnabled")

@@ -31,7 +31,7 @@ import com.watershednaturecenter.Dialogs.RKInstallDialog;
 
 public class MainActivity extends SherlockFragmentActivity
 {
-
+	
 	ViewPager mViewPager;
 	TabsAdapter mTabsAdapter;
 	TextView tabCenter;

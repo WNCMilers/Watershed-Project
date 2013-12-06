@@ -1,7 +1,6 @@
 package com.watershednaturecenter.Dialogs;
 
 import com.watershednaturecenter.Login;
-import com.watershednaturecenter.Membership_Signup_TAB;
 import com.watershednaturecenter.Membership_Signup;
 
 import android.app.AlertDialog;
